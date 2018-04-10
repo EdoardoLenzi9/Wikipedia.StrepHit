@@ -16,11 +16,11 @@ class QuickStatement(object):
     descriptions = []
     sitelinks = []
 
-    def __init__(self, item, property, value, qulifiers, sources, labels, aliases, descriptions, sitelinks):
+    def __init__(self, item, property, value, qualifiers, sources, labels, aliases, descriptions, sitelinks):
         self.item = item
         self.property = property
         self.value = value
-        self.qulifiers = qulifiers
+        self.qualifiers = qualifiers
         self.sources = sources
         self.labels = labels
         self.aliases = aliases

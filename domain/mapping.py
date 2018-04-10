@@ -19,4 +19,4 @@ SOURCE_MAPPING = {
     "www.uni-stuttgart.de": ["Q21417186", "S2349"], # http://www.uni-stuttgart.de/hi/gnt/dsi2/index.php?table_name=dsi&function=details&where_field=id&where_value=$1
     "www.wga.hu": ["Q1464063", "S1882"], # https://tools.wmflabs.org/mix-n-match/api.php?query=redirect&catalog=11&ext_id=$1
     "yba.llgc.org.uk": ["Q5273977", "S1648"] # http://yba.llgc.org.uk/en/$1
-}
+} #TODO multiple entries in URI

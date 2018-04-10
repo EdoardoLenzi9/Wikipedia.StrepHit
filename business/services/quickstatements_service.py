@@ -1,43 +1,42 @@
-import os, datetime
+import os, datetime #, re re.match()
 from domain.models.quick_statement import QuickStatement, Qualifier, Source, Command
+import domain.mapping as mapping
+import business.services.url_service as url_svc
 
-def parse (file_path):
-    if not exists(file_path) :
-        raise Exception("file: {0} not found".format(file_path))
+def parse (row):
+    content = [x.strip() for x in row.strip().split('\t')]
+    current_statement = QuickStatement(content[0], content[1], content[2], [], [], [], [], [], [])
+    
+    index = 2
+    while (index < len(content) -1):
+        index += 1
+        key = content[index]
+        index += 1
+        value = content[index]
+        
+        if(key == "S854"): # "Reference URL"
+            current_statement.sitelinks.append(Command(key, value))
+        if(key == "S248"): # "stated in"
+            current_statement.sources.append(Command(key, value))
+    return current_statement
 
-    quickstatements = []
-    with open(file_path) as file:
+def update_references (input_file, output_file):
+    if not exists(input_file) :
+        raise Exception("file: {0} not found".format(input_file))
+
+    with open(input_file) as file:
         rows = file.readlines() 
         for row in rows:
-            row = row.strip()               # take out leading and ending spaces
-            directives = [x.strip() for x in row.split('\t')]
-            try:           
-                current_statement = QuickStatement(directives[0], directives[1], directives[2], [], [], [], [], [], [])
-                '''
-                index = 2
-                while (index < len(directives) -1):
-                    index += 1
-                    key = directives[index]
-                    index += 1
-                    value = directives[index]
-                    first_char = key[0]
-                    if first_char == "P": 
-                        current_statement.qualifiers.append(Qualifier(key, value))
-                    elif first_char == "S": 
-                        current_statement.sources.append(Source(key, value))
-                    elif first_char == "L": 
-                        current_statement.labels.append(Command(key, value))
-                    elif first_char == "A": 
-                        current_statement.aliases.append(Command(key, value))
-                    elif first_char == "D": 
-                        current_statement.descriptions.append(Command(key, value)) 
-                    elif first_char == "S": 
-                        current_statement.sitelinks.append(Command(key, value)) 
-                    '''
-                quickstatements.append(current_statement)
+            try:  
+                current_statement = parse(row)
+                reference = db_reference(current_statement)
+                log(output_file, "{0}\t{1}".format(row, reference))
             except :
-                print('An error occurs reading {0} file, at line: \n {1} \n'.format(file_path, row))
-    return quickstatements
+                print('An error occurs reading {0} file, at line: \n {1} \n'.format(input_file, row))
+
+def log(file, text):
+    with open(file, 'ab+') as f:
+            f.write("{0}\n".format(text))
 
 def exists(file):
     return os.path.isfile(file)
@@ -45,5 +44,15 @@ def exists(file):
 def get_iso_time(time = datetime.datetime.now()):
     return "{0}Z/14".format(time.replace(microsecond=0).isoformat())
 
-def append_db_reference(quickstatement):
-    
+def db_reference(quickstatement):
+    if(len(quickstatement.sitelinks) > 0): #TODO multiple url
+        domain = url_svc.get_domain(quickstatement.sitelinks[0].content)
+        try: 
+            key = mapping.SOURCE_MAPPING[domain]
+            print(key)
+            return "S248\t{1}\t{2}S1263\t{3}"702/000094420"\t{4}S813\t{5}+2018-03-22T00:00:00Z/11".format(key[0])
+        except :
+            print('URL not mapped: \n {1} \n'.format(quickstatement.sitelinks[0].content))
+    else :
+        print('Statement not contains any sitelink: \n {1} \n'.format(quickstatement.item))
+        return ""
