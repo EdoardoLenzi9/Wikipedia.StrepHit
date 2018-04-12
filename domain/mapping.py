@@ -1,4 +1,5 @@
-# source domain : [source QID, PID of source ID]
+import json
+
 class LinkMapping(object):
     db_id = ""
     db_property = ""
@@ -8,6 +9,26 @@ class LinkMapping(object):
         self.db_id = db_id
         self.db_property = db_property
         self.url_pattern = url_pattern
+
+# source domain : [source QID, PID of source ID]
+
+def add_source(domain, source):
+    if SOURCE_MAPPING.get(domain) == None : 
+        SOURCE_MAPPING[domain] = [source]   
+    else :                         
+        SOURCE_MAPPING[domain].append(source)
+
+def add_unknown_source(domain, unknown_source):
+    if UNKNOWN_SOURCE_MAPPING.get(domain) == None : 
+        UNKNOWN_SOURCE_MAPPING[domain] = [unknown_source]   
+    else :                         
+        UNKNOWN_SOURCE_MAPPING[domain].append(unknown_source)
+
+def export_mappings(output_file="mappings.json"):
+    source_mapping = json.dumps(SOURCE_MAPPING, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    unknown_source_mapping = json.dumps(UNKNOWN_SOURCE_MAPPING, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    log(output_file, source_mapping)
+    log(output_file, unknown_source_mapping)
 
 SOURCE_MAPPING = {
     "adb.anu.edu.au": [ LinkMapping("Q672680", "S1907", "http://adb.anu.edu.au/biography/$1") ],
@@ -31,6 +52,6 @@ SOURCE_MAPPING = {
     "yba.llgc.org.uk": [ LinkMapping("Q5273977", "S1648", "http://yba.llgc.org.uk/en/$1") ]
 } 
 
-
-#TODO multiple entries in URI
-#http://tinyurl.com/yd5c67k4
+UNKNOWN_SOURCE_MAPPING = {
+    #"archive.org": [ "https://archive.org/download" ],
+} 

@@ -26,8 +26,8 @@ def http_call(base_url, parameters, method = "GET", headers = []):
 def get_domain (url):
     return url.split("//")[-1].split("/")[0].split('?')[0]
 
-def validate_url_template(sitelink, link_mapping):
-    pattern = re.compile(link_mapping.url_pattern.replace("$1", ".*"))
+def validate_url_template(sitelink, url_pattern):
+    pattern = re.compile(url_pattern.replace("$1", ".*"))
     if(pattern.match(sitelink)):
     	return True 
     else :
