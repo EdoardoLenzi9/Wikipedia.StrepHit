@@ -86,7 +86,6 @@ def get_identifier(url, first_letter) :
     regex = re.compile(first_letter + ".*")
     return regex.search(url).group(0)  
 
-
 def get_iso_time(time = datetime.datetime.now()):
     return "{0}Z/14".format(time.replace(microsecond=0).isoformat())
 
