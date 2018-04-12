@@ -6,22 +6,19 @@ def sparql_get(query):
     parameters = [('query', query)]
     headers = [Header('Accept', 'application/sparql-results+json')]
     response = http_call(loc.sparql_url, parameters, headers=headers)
-    contents = response.replace("-", "_").replace('\n',' ').replace("xml:lang","xml_lang")
-    content = json_deserialize(contents)
-    return content.results.bindings
+    response = response.replace("-", "_").replace('\n',' ').replace("xml:lang","xml_lang")
+    return json_deserialize(response).results.bindings
 
 def json_deserialize(serialized_json):
     return json.loads(serialized_json, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
 
 def http_call(base_url, parameters, method = "GET", headers = []):
-    #opener = urllib2.build_opener(urllib2.HTTPHandler)
     params = urllib.urlencode(parameters, doseq=True)
     request = urllib2.Request("{0}?{1}".format(base_url, params))
     request.get_method = lambda: method
     for header in headers :
         request.add_header(header.key, header.value)
     return urllib2.urlopen(request).read()
-
 
 def get_domain (url):
     return url.split("//")[-1].split("/")[0].split('?')[0]
@@ -32,6 +29,13 @@ def validate_url_template(sitelink, url_pattern):
     	return True 
     else :
 	    return False
+
+def get_link (row): 
+    regex = re.compile("S854\t[^\t]+")
+    link = re.sub(r'"|(S854)|\n|\t', '', regex.search(row).group(0))
+    if link == "" :
+        return None
+    return link
 
 class Header(object):
     key = ""

@@ -24,4 +24,5 @@ def get_item(domain):
         }
         '''.replace('\n',' ').replace('{0}', domain)
     query =  re.sub(' +',' ',query)
+
     return url_svc.sparql_get(query)

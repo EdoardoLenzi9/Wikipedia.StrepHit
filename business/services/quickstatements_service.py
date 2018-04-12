@@ -1,12 +1,12 @@
 import os, datetime, re, json, time, sys
-from domain.models.quick_statement import QuickStatement, Qualifier, Source, Command
-from domain.mapping import LinkMapping
 import domain.mapping as mapping
 import business.services.url_service as url_svc
 import business.queries.sitelink_queries as query
+import business.services.file_service as file_svc
+from domain.mapping import LinkMapping
 
-def update_references (input_file, output_file, error_file):
-    if not exists(input_file) :
+def update_references (input_file, output_file, error_file, mapping_file):
+    if not file_svc.exists(input_file) :
         raise Exception("file: {0} not found".format(input_file))
 
     with open(input_file) as file:
@@ -17,29 +17,15 @@ def update_references (input_file, output_file, error_file):
             index += 1
             progress(index, total)
             try:  
-                sitelink = get_link(row)
+                sitelink = url_svc.get_link(row)
                 if sitelink != None :
                     reference = generate_db_reference(sitelink)
-                    log(output_file, "{0}\t{1}".format(row, reference))
+                    file_svc.log(output_file, "{0}\t{1}".format(row, reference))
                 else :
-                    log(error_file, "No sitelink at line \t {0}".format(row))
-
+                    file_svc.log(error_file, "No sitelink at line \t {0}".format(row))
             except :
-                print('An error occurs reading {0} file, at line: \n {1} \n'.format(input_file, row))  
-        mapping.export_mappings()
-
-def get_link (row): #TODO now get first link, improve version for multiple links (if possible?) 
-    content = [x.strip() for x in row.strip().split('\t')]
-    index = 2
-    while (index < len(content) -1):
-        index += 1
-        key = content[index]
-        index += 1
-        value = content[index]
-        
-        if(key == "S854"): # "Reference URL"
-            return value.replace('"', '')
-    return None
+                file_svc.log(error_file, 'An error occurs reading {0} file, at line: \n {1} \n'.format(input_file, row))
+        mapping.export_mappings(mapping_file)
 
 def is_unknown_source(domain, sitelink):
     if mapping.UNKNOWN_SOURCE_MAPPING.get(domain) != None : 
@@ -100,12 +86,6 @@ def get_identifier(url, first_letter) :
     regex = re.compile(first_letter + ".*")
     return regex.search(url).group(0)  
 
-def log(file, text):
-    with open(file, 'ab+') as f:
-            f.write("{0}\n".format(text))
-
-def exists(file):
-    return os.path.isfile(file)
 
 def get_iso_time(time = datetime.datetime.now()):
     return "{0}Z/14".format(time.replace(microsecond=0).isoformat())
@@ -117,6 +97,6 @@ def progress(count, total, suffix=''):
 	percents = round(100.0 * count / float(total), 1)
 	bar = '=' * filled_len + '-' * (bar_len - filled_len)
 
-	sys.stdout.write('[%s] %s%s ...%s\r' % (bar, percents, '%', suffix))
+	sys.stdout.write('[%s] %s%s %s Processing line: %s \r' % (bar, percents, '%', suffix, count))
 	sys.stdout.flush()  
 
