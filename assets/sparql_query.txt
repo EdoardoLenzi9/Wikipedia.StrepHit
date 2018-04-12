@@ -1,0 +1,88 @@
+Select ?db ?dbLabel
+
+where{
+  ?db wdt:P31/wdt:P279* wd:Q8513. #tutte le istanze di database
+  ?db ?label ?o 
+  FILTER (lcase(str(?o)) = "nndb")
+
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+  #FILTER regex(?exp, "NNDB", "i") }
+} group by ?db ?dbLabel
+
+
+
+Select ?db ?dbLabel
+
+where{
+  ?db wdt:P31/wdt:P279* wd:Q8513. #tutte le istanze di database
+  ?db ?label "NNDB"
+
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+  #FILTER regex(?exp, "NNDB", "i") }
+} group by ?db ?dbLabel
+
+
+#URLs of Wikipedia in all languages
+SELECT ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel
+WHERE 
+{
+  ?subjects wdt:P856 ?sitelink
+  #?sitelink wdt:P31/wdt:P279* wd:Q17587456
+  #BIND(wd:Q52 AS ?wikipedia)
+  #?sitelink schema:about ?wikipedia .
+  FILTER REGEX(str(?sitelink), "www.wga.hu") .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+Group by ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel
+LIMIT 10
+
+
+SELECT ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel ?wikidataPropertyLabel ?formatterUrlLabel
+WHERE 
+{
+  ?subjects wdt:P856 ?sitelink ;
+            wdt:P1687 ?wikidataProperty .
+  ?wikidataProperty wdt:P1630 ?formatterUrl
+  FILTER REGEX(str(?sitelink), "nndb") .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+Group by ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel ?wikidataPropertyLabel ?formatterUrlLabel
+LIMIT 10 #assumo che un dominio web appartenga ad un unica entità come official web page
+
+
+SELECT ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel ?wikidataPropertyLabel ?formatterUrlLabel
+WHERE 
+{
+  BIND("nndb" AS ?domain).
+  
+  ?subjects wdt:P856 ?sitelink ;
+            wdt:P1687 ?wikidataProperty .
+  ?wikidataProperty wdt:P1630 ?formatterUrl 
+  FILTER (REGEX(str(?formatterUrl), ?domain) || REGEX(str(?sitelink), ?domain)).
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+Group by ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel ?wikidataPropertyLabel ?formatterUrlLabel
+LIMIT 10 #assumo che un dominio web appartenga ad un unica entità come official web page
+
+
+
+
+select ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel ?wikidataPropertyLabel ?formatterUrlLabel
+where {
+        {
+          BIND("http://collection.britishmuseum.org/" AS ?domain).
+          SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+		  ?subjects wdt:P856 ?sitelink ;
+			    wdt:P1687 ?wikidataProperty.
+		  ?wikidataProperty wdt:P1630 ?formatterUrl
+		  FILTER (REGEX(str(?formatterUrl), ?domain) || REGEX(str(?sitelink), ?domain)).
+		}
+        union
+        {
+          BIND("http://collection.britishmuseum.org/" AS ?domain).
+          SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+		  ?subjects wdt:P856 ?sitelink ;
+		  FILTER REGEX(str(?sitelink), ?domain).
+		}
+}
+

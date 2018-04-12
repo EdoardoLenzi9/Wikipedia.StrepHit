@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Launch main.py",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/eddy/Code/Wikipedia/Wikipedia.StrepHit/main.py"
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
