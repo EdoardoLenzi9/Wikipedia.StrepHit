@@ -19,6 +19,16 @@ def export_mappings(output_file="mappings.json"):
     file_svc.log(output_file, source_mapping)
     file_svc.log(output_file, unknown_source_mapping)
 
+class LinkMapping(object):
+    db_id = ""
+    db_property = ""
+    url_pattern = ""
+
+    def __init__(self, db_id, db_property, url_pattern):
+        self.db_id = db_id
+        self.db_property = db_property
+        self.url_pattern = url_pattern
+        
 # source domain : [source QID, PID of source ID]
 
 SOURCE_MAPPING = {
@@ -48,13 +58,3 @@ SOURCE_MAPPING = {
 UNKNOWN_SOURCE_MAPPING = {
     #"archive.org": [ "https://archive.org/download" ],
 } 
-
-class LinkMapping(object):
-    db_id = ""
-    db_property = ""
-    url_pattern = ""
-
-    def __init__(self, db_id, db_property, url_pattern):
-        self.db_id = db_id
-        self.db_property = db_property
-        self.url_pattern = url_pattern
