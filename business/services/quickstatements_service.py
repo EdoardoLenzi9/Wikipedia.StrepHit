@@ -20,6 +20,7 @@ def update_references (input_file, output_file, error_file, mapping_file):
                 sitelink = url_svc.get_link(row)
                 if sitelink != None :
                     reference = generate_db_reference(sitelink)
+                    row = row.replace("\n", "")
                     file_svc.log(output_file, "{0}\t{1}".format(row, reference))
                 else :
                     file_svc.log(error_file, "No sitelink at line \t {0}".format(row))

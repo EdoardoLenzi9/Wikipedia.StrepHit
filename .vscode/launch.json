@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Launch on windows",
+            "type": "python",
+            "request": "launch",
+            "program": "C:/Code/Wikipedia.StrepHit/main.py"
+        },
+        {
             "name": "Python: Launch main.py",
             "type": "python",
             "request": "launch",
