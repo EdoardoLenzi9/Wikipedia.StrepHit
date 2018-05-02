@@ -75,7 +75,7 @@ def generate_db_reference(sitelink):
         for link_mapping in mapping.SOURCE_MAPPING[domain] :
             if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) : #todo case like more than one $1
                 content = url_svc.extract_placeholder(link_mapping.url_pattern, sitelink)
-                return "S248\t{0}\t{1}\t{2}\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
+                return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
         raise Exception("mapping not found ")
     except : 
         return new_mapping(domain, sitelink)
@@ -103,7 +103,7 @@ def new_mapping(domain, sitelink): #mappo solo quello che me lo valida
                         pattern = url_pattern.split("$1")
                         content = sitelink.replace(pattern[0], "").replace(pattern[1], "")
                         mapping.add_source(real_domain, LinkMapping(db_id, db_property, url_pattern))
-                        return "S248\t{0}\t{1}\t{2}\tS813\t{3}".format(db_id, db_property, content, get_iso_time())
+                        return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(db_id, db_property, content, get_iso_time())
         if len(result) == 0:
             mapping.add_unknown_source(domain, domain)
             return ""

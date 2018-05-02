@@ -68,7 +68,7 @@ class QuickStatementSvcTest(unittest.TestCase):
         for mapping_entry in mapping_list :
             if url_svc.validate_url_template(link, mapping_entry.url_pattern) : 
                 content = url_svc.extract_placeholder(mapping_entry.url_pattern, link)
-        reference_prefix = "S248\t{0}\t{1}\t{2}\tS813\t".format(mapping_entry.db_id, mapping_entry.db_property, content)
+        reference_prefix = "S248\t{0}\t{1}\t\"{2}\"\tS813\t".format(mapping_entry.db_id, mapping_entry.db_property, content)
 
         self.assertIn(reference_prefix, reference)
         
