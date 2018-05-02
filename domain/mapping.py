@@ -1,23 +1,40 @@
 import json
 import business.services.file_service as file_svc
+import business.services.url_service as url_svc
+import domain.localizations as loc 
+
+def add_mapping(domain, source, target):
+    if domain != None :
+        domain = domain.encode('ascii').replace("/", "")
+    if target.get(domain) == None : 
+        target[domain] = [source]   
+    elif source not in target[domain]:                         
+        target[domain].append(source)
+    export_mappings()
 
 def add_source(domain, source):
-    if SOURCE_MAPPING.get(domain) == None : 
-        SOURCE_MAPPING[domain] = [source]   
-    else :                         
-        SOURCE_MAPPING[domain].append(source)
+    if (source.url_pattern != None) :
+        source.url_pattern = source.url_pattern.encode('ascii')
+    add_mapping(domain, source, SOURCE_MAPPING)
 
 def add_unknown_source(domain, unknown_source):
-    if UNKNOWN_SOURCE_MAPPING.get(domain) == None : 
-        UNKNOWN_SOURCE_MAPPING[domain] = [unknown_source]   
-    else :                         
-        UNKNOWN_SOURCE_MAPPING[domain].append(unknown_source)
+    if (unknown_source != None) :
+        unknown_source = unknown_source.encode('ascii')
+    add_mapping(domain, unknown_source, UNKNOWN_SOURCE_MAPPING)
 
-def export_mappings(output_file="mappings.json"):
+
+def export_mappings(mapping_file=loc.mapping_path, unknown_mappin_file=loc.unknown_mapping_path):
     source_mapping = json.dumps(SOURCE_MAPPING, default=lambda o: o.__dict__, sort_keys=True, indent=4)
     unknown_source_mapping = json.dumps(UNKNOWN_SOURCE_MAPPING, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-    file_svc.log(output_file, source_mapping)
-    file_svc.log(output_file, unknown_source_mapping)
+    file_svc.log(mapping_file, source_mapping, 'w')
+    file_svc.log(unknown_mappin_file, unknown_source_mapping, 'w')
+
+def import_mappings(mapping_file=loc.mapping_path, unknown_mappin_file=loc.unknown_mapping_path):
+    global SOURCE_MAPPING, UNKNOWN_SOURCE_MAPPING
+    a = json.load(open(mapping_file))
+    b = json.load(open(unknown_mappin_file))
+    SOURCE_MAPPING = json.load(open(mapping_file))
+    UNKNOWN_SOURCE_MAPPING = json.load(open(unknown_mappin_file))
 
 class LinkMapping(object):
     db_id = ""

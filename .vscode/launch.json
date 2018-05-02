@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Launch tests on windows",
+            "type": "python",
+            "request": "launch",
+            "program": "C:/Code/Wikipedia.StrepHit/test.py"
+        },
+        {
             "name": "Python: Launch on windows",
             "type": "python",
             "request": "launch",

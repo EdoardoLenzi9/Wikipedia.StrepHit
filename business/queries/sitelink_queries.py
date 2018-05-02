@@ -4,7 +4,7 @@ import re
 def get_item(domain):
     #select Distinct ?subjects ?subjectsLabel ?sitelink ?sitelinkLabel ?wikidataProperty ?wikidataPropertyLabel ?formatterUrlLabel
     query = '''
-        select Distinct ?subjects ?wikidataProperty ?formatterUrlLabel
+        select Distinct ?subjects ?wikidataProperty ?formatterUrlLabel ?sitelinkLabel
         where {
             {
                 BIND("{0}" AS ?domain).

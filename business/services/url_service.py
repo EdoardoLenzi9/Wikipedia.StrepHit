@@ -24,7 +24,7 @@ def get_domain (url):
     return url.split("//")[-1].split("/")[0].split('?')[0]
 
 def validate_url_template(sitelink, url_pattern):
-    pattern = re.compile(url_pattern.replace("$1", ".*"))
+    pattern = re.compile(re.escape(url_pattern.encode('ascii')).replace("\\$1", ".*"))
     if(pattern.match(sitelink)):
     	return True 
     else :
@@ -36,6 +36,10 @@ def get_link (row):
     if link == "" :
         return None
     return link
+
+def extract_placeholder(url_pattern, url): # TODO now this works only for one placeholder ($1)
+    url_pattern = url_pattern.split("$1")
+    return url.replace(url_pattern[0], "").replace(url_pattern[1], "")
 
 class Header(object):
     key = ""
