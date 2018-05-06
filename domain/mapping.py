@@ -23,13 +23,13 @@ def add_unknown_source(domain, unknown_source):
     add_mapping(domain, unknown_source, UNKNOWN_SOURCE_MAPPING)
 
 
-def export_mappings(mapping_file=loc.mapping_path, unknown_mappin_file=loc.unknown_mapping_path):
+def export_mappings(mapping_file=loc.known_mapping_file, unknown_mappin_file=loc.unknown_mapping_file):
     source_mapping = json.dumps(SOURCE_MAPPING, default=lambda o: o.__dict__, sort_keys=True, indent=4)
     unknown_source_mapping = json.dumps(UNKNOWN_SOURCE_MAPPING, default=lambda o: o.__dict__, sort_keys=True, indent=4)
     file_svc.log(mapping_file, source_mapping, 'w')
     file_svc.log(unknown_mappin_file, unknown_source_mapping, 'w')
 
-def import_mappings(mapping_file=loc.mapping_path, unknown_mappin_file=loc.unknown_mapping_path):
+def import_mappings(mapping_file=loc.known_mapping_file, unknown_mappin_file=loc.unknown_mapping_file):
     global SOURCE_MAPPING, UNKNOWN_SOURCE_MAPPING
     a = json.load(open(mapping_file))
     b = json.load(open(unknown_mappin_file))
@@ -40,6 +40,15 @@ class LinkMapping(object):
     db_id = ""
     db_property = ""
     url_pattern = ""
+    
+    def __eq__(self, other):
+        if self.db_id == other.db_id and self.db_property == other.db_property and self.url_pattern == other.url_pattern :
+            return True
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     def __init__(self, db_id, db_property, url_pattern):
         self.db_id = db_id

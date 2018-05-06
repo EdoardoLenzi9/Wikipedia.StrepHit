@@ -97,3 +97,15 @@ class QuickStatementSvcTest(unittest.TestCase):
         self.assertTrue(qs_svc.is_unknown_source(domain, link))
         self.assertEqual("", reference)
         self.assertIn("www.daao.org.au", mapping.UNKNOWN_SOURCE_MAPPING[domain])
+
+class TestOnTheFly(unittest.TestCase):
+    def test_generate_db_reference_with_url_similar_to_a_wikidata_url_pattern(self):
+        # Arrange         
+        link = "http://vocab.getty.edu/ulan/500122964"
+
+        # Act
+        reference = qs_svc.generate_db_reference(link)
+
+        # Assert
+        domain = url_svc.get_domain(link)
+        self.assertTrue(True) # TODO implement test

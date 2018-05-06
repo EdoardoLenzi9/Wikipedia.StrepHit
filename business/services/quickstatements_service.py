@@ -1,19 +1,27 @@
-import os, datetime, re, time, sys
+import os, datetime, re, time, sys, threading
 import domain.mapping as mapping
+import domain.localizations as loc
 import business.services.url_service as url_svc
 import business.queries.sitelink_queries as query
 import business.services.file_service as file_svc
 from domain.mapping import LinkMapping
 
+# constants
+input_file = loc.input_file 
+output_file = loc.output_file
+error_file = loc.error_file
+total = 0
+index = 0
+
 # list of unmapped url
-def export_unmapped_url_list (input_file, output_file):
+def export_unmapped_url_list ():
     if not file_svc.exists(input_file) :
         raise Exception("file: {0} not found".format(input_file))
 
     with open(input_file) as file:
         rows = file.readlines() 
-        index = 0
         total = len(rows)
+        index = 0
         for row in rows:
             index += 1
             progress(index, total)
@@ -30,28 +38,53 @@ def export_unmapped_url_list (input_file, output_file):
             except : 
                 file_svc.log(output_file, row)
                 
-def update_references (input_file, output_file, error_file, mapping_file):
-    if not file_svc.exists(input_file) :
+def add_db_references_async (isAsyncMode = False):
+    global total
+    if not file_svc.exists(loc.input_file) :
         raise Exception("file: {0} not found".format(input_file))
 
     with open(input_file) as file:
         rows = file.readlines() 
-        index = 0
         total = len(rows)
         for row in rows:
-            index += 1
             progress(index, total)
             try:  
                 sitelink = url_svc.get_link(row)
                 if sitelink != None :
-                    reference = generate_db_reference(sitelink)
-                    row = row.replace("\n", "")
-                    file_svc.log(output_file, "{0}\t{1}".format(row, reference))
+                    if(isAsyncMode):
+                        thread = threading.Thread(target=generate_db_reference_wrapper, args=(row, sitelink))
+                        thread.daemon = True
+                        thread.start()                       
+                    else :
+                        generate_db_reference_wrapper(row, sitelink)
                 else :
                     file_svc.log(error_file, "No sitelink at line \t {0}".format(row))
             except :
                 file_svc.log(error_file, 'An error occurs reading {0} file, at line: \n {1} \n'.format(input_file, row))
-        mapping.export_mappings(mapping_file)
+
+def generate_db_reference_wrapper(row, sitelink):  
+    global index           
+    reference = generate_db_reference(sitelink)
+    row = row.replace("\n", "")
+    file_svc.log(output_file, "{0}\t{1}".format(row, reference))
+    mapping.export_mappings()
+    index += 1
+    progress(index, total)
+
+def generate_db_reference(sitelink, map_all_responses = loc.MAP_ALL_RESPONSES):
+    domain = url_svc.get_domain(sitelink)
+    if(domain == ""):
+        return ""
+    if(is_unknown_source(domain, sitelink)) :
+        return get_db_id(domain)
+    try: 
+        for link_mapping in mapping.SOURCE_MAPPING[domain] :
+            if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) : #todo case like more than one $1
+                content = url_svc.extract_placeholder(link_mapping.url_pattern, sitelink)
+                return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
+        raise Exception("mapping not found ")
+    except : 
+        return new_mapping(domain, sitelink)
 
 def is_unknown_source(domain, sitelink):
     if mapping.UNKNOWN_SOURCE_MAPPING.get(domain) != None : 
@@ -66,19 +99,6 @@ def get_db_id(domain):
             if mapping_entry.db_id != None :
                 return "S248\t{0}\tS813\t{1}".format(mapping_entry.db_id, get_iso_time())
     return ""
-
-def generate_db_reference(sitelink):
-    domain = url_svc.get_domain(sitelink)
-    if(is_unknown_source(domain, sitelink)) :
-        return get_db_id(domain)
-    try: 
-        for link_mapping in mapping.SOURCE_MAPPING[domain] :
-            if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) : #todo case like more than one $1
-                content = url_svc.extract_placeholder(link_mapping.url_pattern, sitelink)
-                return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
-        raise Exception("mapping not found ")
-    except : 
-        return new_mapping(domain, sitelink)
 
 def new_mapping(domain, sitelink): #mappo solo quello che me lo valida
     db_id = None
@@ -141,4 +161,4 @@ def progress(count, total, suffix=''):
         sys.stdout.write('[%s] %s%s %s Processing line: %s \r' % (bar, percents, '%', suffix, count))
         sys.stdout.flush()  
     except :
-        print ("warning: [shuld never happen error] loader-bar error")
+        print ("warning: [shuld never happen error] loader-bar error count \t {0} \t total {1} \t ".format(count, total))

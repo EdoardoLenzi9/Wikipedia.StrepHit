@@ -18,5 +18,5 @@ class MappingTest(unittest.TestCase):
         # Assert
         self.assertEqual(mapping.SOURCE_MAPPING[new_domain][0], new_source)
         self.assertEqual(mapping.SOURCE_MAPPING[old_domain][1], new_source)
-        self.assertRaises(mapping.SOURCE_MAPPING[old_domain][2])
+        self.assertEqual(len(mapping.SOURCE_MAPPING[old_domain]), 2)
      
