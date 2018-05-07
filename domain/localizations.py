@@ -11,3 +11,4 @@ not_mapped_url_file = "assets/not_mapped_url.txt"
 
 # Const
 MAP_ALL_RESPONSES = True
+IS_ASYNC_MODE = False

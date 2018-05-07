@@ -38,7 +38,7 @@ def export_unmapped_url_list ():
             except : 
                 file_svc.log(output_file, row)
                 
-def add_db_references_async (isAsyncMode = False):
+def add_db_references_async (isAsyncMode = loc.IS_ASYNC_MODE):
     global total
     if not file_svc.exists(loc.input_file) :
         raise Exception("file: {0} not found".format(input_file))
@@ -82,9 +82,18 @@ def generate_db_reference(sitelink, map_all_responses = loc.MAP_ALL_RESPONSES):
             if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) : #todo case like more than one $1
                 content = url_svc.extract_placeholder(link_mapping.url_pattern, sitelink)
                 return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
+        if(map_all_responses and is_domain_just_mapped(domain)) :
+            return get_db_id(domain)
         raise Exception("mapping not found ")
     except : 
+        if map_all_responses:
+            return mapping_all(domain, sitelink)
         return new_mapping(domain, sitelink)
+
+def is_domain_just_mapped(domain):
+    if domain not in mapping.DOMAINS_JUST_MAPPED : 
+        return True
+    return False 
 
 def is_unknown_source(domain, sitelink):
     if mapping.UNKNOWN_SOURCE_MAPPING.get(domain) != None : 
@@ -99,6 +108,42 @@ def get_db_id(domain):
             if mapping_entry.db_id != None :
                 return "S248\t{0}\tS813\t{1}".format(mapping_entry.db_id, get_iso_time())
     return ""
+
+def mapping_all(domain, sitelink): 
+    if domain not in mapping.DOMAINS_JUST_MAPPED :
+        mapping.DOMAINS_JUST_MAPPED.append(domain)
+    db_id = None
+    try:
+        result = query.get_item(domain) 
+
+        for row in result :
+            real_domain = url_svc.get_domain(row.sitelinkLabel.value)
+            db_id = get_identifier(row.subjects.value, "Q")
+            db_property =  get_identifier(row.wikidataProperty.value, "P").replace("P", "S") if hasattr(row, 'wikidataProperty') else None
+            url_pattern = row.formatterUrlLabel.value if  hasattr(row, 'formatterUrlLabel') else None 
+            mapping.add_source(real_domain, LinkMapping(db_id, db_property, url_pattern))
+
+        for link_mapping in mapping.SOURCE_MAPPING[domain] :
+            if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) : 
+                content = url_svc.extract_placeholder(link_mapping.url_pattern, sitelink)
+                return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
+
+        if len(result) == 0:
+            mapping.add_unknown_source(domain, domain)
+            return ""
+        raise Exception("db domain not found in wikidata")
+    except : 
+        regex = re.compile("{0}/[^/]+".format(domain))
+        uri = regex.search(sitelink).group(0)  
+        while uri != "" :
+            result = query.get_item(uri)
+            if len(result) == 0 :
+                mapping.add_unknown_source(domain, uri)
+                mapping.add_source(domain, LinkMapping(db_id, None, None))
+                break
+            regex = re.compile("{0}/[^/]+".format(uri))
+            uri = regex.search(sitelink).group(0)  
+        return get_db_id(domain)
 
 def new_mapping(domain, sitelink): #mappo solo quello che me lo valida
     db_id = None

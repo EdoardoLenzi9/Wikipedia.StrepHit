@@ -84,3 +84,5 @@ SOURCE_MAPPING = {
 UNKNOWN_SOURCE_MAPPING = {
     #"archive.org": [ "https://archive.org/download" ],
 } 
+
+DOMAINS_JUST_MAPPED = []
