@@ -18,6 +18,8 @@ def export_unmapped_url_list ():
     if not file_svc.exists(input_file) :
         raise Exception("file: {0} not found".format(input_file))
 
+    mapping.import_mappings()
+
     with open(input_file) as file:
         rows = file.readlines() 
         total = len(rows)
@@ -42,6 +44,8 @@ def add_db_references_async (isAsyncMode = loc.IS_ASYNC_MODE):
     global total
     if not file_svc.exists(loc.input_file) :
         raise Exception("file: {0} not found".format(input_file))
+
+    mapping.import_mappings()
 
     with open(input_file) as file:
         rows = file.readlines() 

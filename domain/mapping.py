@@ -3,24 +3,25 @@ import business.services.file_service as file_svc
 import business.services.url_service as url_svc
 import domain.localizations as loc 
 
-def add_mapping(domain, source, target):
+def add_mapping(domain, source, target, export_mappings=True):
     if domain != None :
         domain = domain.encode('ascii').replace("/", "")
     if target.get(domain) == None : 
         target[domain] = [source]   
     elif source not in target[domain]:                         
         target[domain].append(source)
-    export_mappings()
+    if(export_mappings):
+        export_mappings()
 
-def add_source(domain, source):
+def add_source(domain, source, export_mappings=True):
     if (source.url_pattern != None) :
         source.url_pattern = source.url_pattern.encode('ascii')
-    add_mapping(domain, source, SOURCE_MAPPING)
+    add_mapping(domain, source, SOURCE_MAPPING, export_mappings)
 
-def add_unknown_source(domain, unknown_source):
+def add_unknown_source(domain, unknown_source, export_mappings=True):
     if (unknown_source != None) :
         unknown_source = unknown_source.encode('ascii')
-    add_mapping(domain, unknown_source, UNKNOWN_SOURCE_MAPPING)
+    add_mapping(domain, unknown_source, UNKNOWN_SOURCE_MAPPING, export_mappings)
 
 
 def export_mappings(mapping_file=loc.known_mapping_file, unknown_mappin_file=loc.unknown_mapping_file):
@@ -29,12 +30,22 @@ def export_mappings(mapping_file=loc.known_mapping_file, unknown_mappin_file=loc
     file_svc.log(mapping_file, source_mapping, 'w')
     file_svc.log(unknown_mappin_file, unknown_source_mapping, 'w')
 
-def import_mappings(mapping_file=loc.known_mapping_file, unknown_mappin_file=loc.unknown_mapping_file):
-    global SOURCE_MAPPING, UNKNOWN_SOURCE_MAPPING
-    a = json.load(open(mapping_file))
-    b = json.load(open(unknown_mappin_file))
-    SOURCE_MAPPING = json.load(open(mapping_file))
-    UNKNOWN_SOURCE_MAPPING = json.load(open(unknown_mappin_file))
+def import_mappings(mapping_file=loc.known_mapping_file, unknown_mapping_file=loc.unknown_mapping_file):
+    try :
+        global SOURCE_MAPPING, UNKNOWN_SOURCE_MAPPING
+        with open(mapping_file) as file:
+            items = json.load(file)
+            for item in items :
+                for subitem in items[item] :
+                    link_mapping = LinkMapping(subitem["db_id"], subitem["db_property"], subitem["url_pattern"])  
+                    add_source(item, link_mapping, False)
+        with open(unknown_mapping_file) as file:
+            items = json.load(file)
+            for item in items :
+                for subitem in items[item] :
+                    add_unknown_source(item, subitem, False)
+    except :
+        print "\n Error, wrong mapping files \n"
 
 class LinkMapping(object):
     db_id = ""
