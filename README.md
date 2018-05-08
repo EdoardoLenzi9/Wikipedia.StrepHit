@@ -15,14 +15,23 @@ or
 
 ## Assets
 
-| File                      | Path                                      |
-| --------------------------|:-----------------------------------------:|
-| input dump                | ./assets/supervised_dataset.qs            |
-| output dump               | ./assets/supervised_dataset_output.qs     |
-| error log                 | ./assets/supervised_dataset_errors.log    |
-| json with new mappings    | ./assets/supervised_dataset_errors.log    |
+| File                          | Path                                              |
+| ------------------------------|:-------------------------------------------------:|
+| input dump                    | ./assets/supervised_dataset.qs                    |
+| output dump                   | ./assets/supervised_dataset_output.qs             |
+| error log                     | ./assets/supervised_dataset_errors.log            |
+| json with mappings            | ./assets/supervised_dataset_mappings.json         |
+| json with unknown mappings    | ./assets/supervised_dataset_unknown_mappings.json |
 
+## domain/localizations.py
+Here you can manage all constants, strings, paths and urls of the script.
+
+**ie** 
+```python
+    MAP_ALL_RESPONSES = False   # this mode increase the memory usage but also the speed of the script (if 
+                                # your mappings aren't complete)
+    IS_ASYNC_MODE = False       # this mode compute on a new thread every row of the dataset 
+                                # (this increase the speed of the script but the output rows order can change)
+```
 ## TODO
-    1. every url template pattern can have only one slot ($1) or more?  
-    2. run async tasks in parallel (output dump rows order)
-    3. optimize sparql query, take only best fit links
+    1. async_mode and map_all_responses_mode need more testing and fixes

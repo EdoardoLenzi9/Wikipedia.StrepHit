@@ -1,0 +1,201 @@
+{
+    "adb.anu.edu.au": [
+        {
+            "db_id": "Q672680", 
+            "db_property": "S1907", 
+            "url_pattern": "http://adb.anu.edu.au/biography/$1"
+        }
+    ], 
+    "archive.org": [
+        {
+            "db_id": "Q461", 
+            "db_property": "S724", 
+            "url_pattern": "https://archive.org/details/$1"
+        }, 
+        {
+            "db_id": "Q55405", 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "collection.britishmuseum.org": [
+        {
+            "db_id": "Q34753751", 
+            "db_property": null, 
+            "url_pattern": null
+        }, 
+        {
+            "db_id": null, 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "collection.cooperhewitt.org": [
+        {
+            "db_id": "Q1129820", 
+            "db_property": "S2011", 
+            "url_pattern": "https://collection.cooperhewitt.org/people/$1/"
+        }
+    ], 
+    "dictionaryofarthistorians.org": [
+        {
+            "db_id": "Q17166797", 
+            "db_property": "S2332", 
+            "url_pattern": "https://dictionaryofarthistorians.org/$1.html"
+        }
+    ], 
+    "en.wikisource.org": [
+        {
+            "db_id": "Q15156406", 
+            "db_property": null, 
+            "url_pattern": null
+        }, 
+        {
+            "db_id": null, 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "gameo.org": [
+        {
+            "db_id": "Q1531559", 
+            "db_property": "S1842", 
+            "url_pattern": "http://gameo.org/index.php?title=$1"
+        }
+    ], 
+    "munksroll.rcplondon.ac.uk": [
+        {
+            "db_id": "Q6936720", 
+            "db_property": "S2941", 
+            "url_pattern": "http://munksroll.rcplondon.ac.uk/Biography/Details/$1"
+        }
+    ], 
+    "rkd.nl": [
+        {
+            "db_id": "Q17299517", 
+            "db_property": "S650", 
+            "url_pattern": "https://rkd.nl/en/explore/artists/$1"
+        }
+    ], 
+    "sculpture.gla.ac.uk": [
+        {
+            "db_id": "Q6754185", 
+            "db_property": "S2914", 
+            "url_pattern": "http://sculpture.gla.ac.uk/view/person.php?id=$1"
+        }
+    ], 
+    "structurae.net": [
+        {
+            "db_id": "Q1061861", 
+            "db_property": "S2418", 
+            "url_pattern": "https://structurae.de/personen/$1"
+        }
+    ], 
+    "vocab.getty.edu": [
+        {
+            "db_id": "Q2494649", 
+            "db_property": "S245", 
+            "url_pattern": "http://vocab.getty.edu/page/ulan/$1"
+        }, 
+        {
+            "db_id": "Q25344041", 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "www.bbc.co.uk": [
+        {
+            "db_id": "Q7257339", 
+            "db_property": "S1367", 
+            "url_pattern": "https://artuk.org/discover/artworks/search/actor:$1"
+        }, 
+        {
+            "db_id": "Q47470696", 
+            "db_property": null, 
+            "url_pattern": null
+        }, 
+        {
+            "db_id": "Q30611658", 
+            "db_property": null, 
+            "url_pattern": null
+        }, 
+        {
+            "db_id": "Q30644712", 
+            "db_property": null, 
+            "url_pattern": null
+        }, 
+        {
+            "db_id": "Q30641164", 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "www.brown.edu": [
+        {
+            "db_id": "Q49114", 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "www.genealogics.org": [
+        {
+            "db_id": "Q19847326", 
+            "db_property": "S1819", 
+            "url_pattern": "http://www.genealogics.org/getperson.php?personID=$1&tree=LEO"
+        }
+    ], 
+    "www.metal-archives.com": [
+        {
+            "db_id": "Q7062828", 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "www.museothyssen.org": [
+        {
+            "db_id": "Q176251", 
+            "db_property": "S2431", 
+            "url_pattern": "http://www.museothyssen.org/en/thyssen/ficha_artista/$1"
+        }
+    ], 
+    "www.newulsterbiography.co.uk": [
+        {
+            "db_id": "Q21814517", 
+            "db_property": "S2029", 
+            "url_pattern": "http://www.newulsterbiography.co.uk/index.php/home/viewPerson/$1"
+        }
+    ], 
+    "www.nndb.com": [
+        {
+            "db_id": "Q1373513", 
+            "db_property": "S1263", 
+            "url_pattern": "http://www.nndb.com/people/$1/"
+        }
+    ], 
+    "www.uni-stuttgart.de": [
+        {
+            "db_id": "Q21417186", 
+            "db_property": "S2349", 
+            "url_pattern": "http://www.uni-stuttgart.de/hi/gnt/dsi2/index.php?table_name=dsi&function=details&where_field=id&where_value=$1"
+        }
+    ], 
+    "www.wga.hu": [
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "url_pattern": "https://tools.wmflabs.org/mix-n-match/api.php?query=redirect&catalog=11&ext_id=$1"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": null, 
+            "url_pattern": null
+        }
+    ], 
+    "yba.llgc.org.uk": [
+        {
+            "db_id": "Q5273977", 
+            "db_property": "S1648", 
+            "url_pattern": "http://yba.llgc.org.uk/en/$1"
+        }
+    ]
+}

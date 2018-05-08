@@ -24,6 +24,8 @@ def get_domain (url):
     return url.split("//")[-1].split("/")[0].split('?')[0]
 
 def validate_url_template(sitelink, url_pattern):
+    if(url_pattern == None) :
+        return False
     pattern = re.compile(re.escape(url_pattern.encode('ascii')).replace("\\$1", ".*"))
     if(pattern.match(sitelink)):
     	return True 

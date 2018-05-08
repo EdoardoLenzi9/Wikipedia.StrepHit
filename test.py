@@ -8,7 +8,8 @@ def run_test(test_suite) :
 
 run_test(domain_test.MappingTest)
 run_test(business_test.QueriesTest)
-
 run_test(business_test.UrlSvcTest)
 run_test(business_test.QuickStatementSvcTest)
+run_test(business_test.TestOnTheFly)
+
 
