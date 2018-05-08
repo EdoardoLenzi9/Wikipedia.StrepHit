@@ -1,1 +1,5 @@
 *.pyc
+assets/supervised_dataset_output.qs
+assets/supervised_dataset_mappings.json
+assets/supervised_dataset_unknown_mappings.json
+assets/supervised_dataset_errors.log
