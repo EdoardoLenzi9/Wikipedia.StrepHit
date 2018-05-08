@@ -1,1 +1,3 @@
 *.pyc
+assets/supervised_dataset_output.qs
+assets/supervised_dataset_errors.log

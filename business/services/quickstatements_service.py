@@ -210,4 +210,4 @@ def progress(count, total, suffix=''):
         sys.stdout.write('[%s] %s%s %s Processing line: %s \r' % (bar, percents, '%', suffix, count))
         sys.stdout.flush()  
     except :
-        print ("warning: [shuld never happen error] loader-bar error count \t {0} \t total {1} \t ".format(count, total))
+        print ("\n warning: [shuld never happen error] loader-bar error count \t {0} \t total {1} \n".format(count, total))
