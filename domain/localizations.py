@@ -10,5 +10,5 @@ unknown_mapping_file = "assets/supervised_dataset_unknown_mappings.json"
 not_mapped_url_file = "assets/not_mapped_url.txt"
 
 # Const
-MAP_ALL_RESPONSES = True
+MAP_ALL_RESPONSES = False
 IS_ASYNC_MODE = False

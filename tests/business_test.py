@@ -72,7 +72,7 @@ class QuickStatementSvcTest(unittest.TestCase):
 
         self.assertIn(reference_prefix, reference)
         
-    def test_generate_db_reference_for_an_known_domain_but_unknown_url_pattern(self):
+    def test_generate_db_reference_for_a_known_domain_but_unknown_url_pattern(self):
         # Arrange         
         link =  "https://archive.org/download/biographicaldict01johnuoft/biographicaldict01johnuoft_djvu.txt"
 
@@ -97,7 +97,7 @@ class QuickStatementSvcTest(unittest.TestCase):
         self.assertTrue(qs_svc.is_unknown_source(domain, link))
         self.assertEqual("", reference)
         self.assertIn("www.daao.org.au", mapping.UNKNOWN_SOURCE_MAPPING[domain])
-
+'''
 class TestOnTheFly(unittest.TestCase):
     def test_generate_db_reference_with_url_similar_to_a_wikidata_url_pattern(self):
         # Arrange         
@@ -109,3 +109,4 @@ class TestOnTheFly(unittest.TestCase):
         # Assert
         domain = url_svc.get_domain(link)
         self.assertTrue(True) # TODO implement test
+'''
