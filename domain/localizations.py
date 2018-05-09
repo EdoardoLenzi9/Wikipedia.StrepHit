@@ -9,7 +9,9 @@ log_file = "assets/supervised_dataset.log"
 known_mapping_file = "assets/supervised_dataset_mappings.json"
 unknown_mapping_file = "assets/supervised_dataset_unknown_mappings.json"
 not_mapped_url_file = "assets/not_mapped_url.txt"
+old_input_file = "assets/supervised_dataset.old.qs"
 
 # Const
 MAP_ALL_RESPONSES = False
 IS_ASYNC_MODE = False
+DELETE_ROW = False # delete row when refresh url which is not reachable (must have stable internet connection)

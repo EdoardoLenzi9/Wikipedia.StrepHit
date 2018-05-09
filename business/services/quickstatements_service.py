@@ -43,7 +43,7 @@ def export_unmapped_url_list ():
 
 # refresh remapped urls
 def refresh_urls (domains = []):
-    foreach_domain = len(domains) > 0 
+    foreach_domain = len(domains) == 0 
     if not file_svc.exists(input_file) :
         raise Exception("file: {0} not found".format(input_file))
 
@@ -59,9 +59,13 @@ def refresh_urls (domains = []):
                 if sitelink != None :
                     if foreach_domain or (url_svc.get_domain(sitelink) in domains):
                         current_url = url_svc.refresh_url(sitelink)
-                        row = row.replace(sitelink, current_url)
+                        if current_url != None :
+                            row = row.replace(sitelink, current_url)
+                            file_svc.log(log_file, "mapped \t {0} \t to \t {1}".format(sitelink, current_url))
+                        elif loc.DELETE_ROW :
+                            row = row.replace("S854\t{0}".format(sitelink), current_url)
+                            file_svc.log(log_file, "deleted row (because link isn't active): \t {0}".format(row))
                 file_svc.log(output_file, row)
-                file_svc.log(log_file, "mapped \t {0} \t to \t {1}".format(sitelink, current_url))
             except : 
                 file_svc.log(error_file, "error at row: {0}".format(row))
 
@@ -94,6 +98,8 @@ def add_db_references_async (isAsyncMode = loc.IS_ASYNC_MODE):
 def generate_db_reference_wrapper(row, sitelink):  
     global index           
     reference = generate_db_reference(sitelink)
+    if(reference == "") :
+        reference = "S813\t{0}".format(get_iso_time())
     row = row.replace("\n", "")
     file_svc.log(output_file, "{0}\t{1}".format(row, reference))
     mapping.export_mappings()
