@@ -35,9 +35,38 @@ class UrlSvcTest(unittest.TestCase):
         # Act and Assert
         mapping.import_mappings();
         
-        self.assertEqual(0,0)
+        self.assertEqual(0,0) #TODO
+    
+    def test_url_refresh_on_a_changed_url(self):
+        # Arrange
+        old_url = 'https://www.bbc.co.uk/arts/yourpaintings/artists/cornelis-troost'
+        new_url = 'https://artuk.org/discover/artists/troost-cornelis-16961750'
 
+        # Act 
+        refreshed_url = url_svc.refresh_url(old_url)
         
+        # Assert
+        self.assertEqual(refreshed_url, new_url)
+
+    def test_url_refresh_on_an_inexistent_url(self):
+        # Arrange
+        old_url = 'https://www.thisurlnotexistsihope.com'
+
+        # Act 
+        refreshed_url = url_svc.refresh_url(old_url)
+        
+        # Assert
+        self.assertIsNone(refreshed_url)
+
+    def test_url_refresh_on_an_normal_url(self):
+        # Arrange
+        url = 'http://adb.anu.edu.au/biography/white-patrick-victor-paddy-14925'
+
+        # Act 
+        refreshed_url = url_svc.refresh_url(url)
+        
+        # Assert
+        self.assertEqual(refreshed_url, url)
 
 class QuickStatementSvcTest(unittest.TestCase):
 

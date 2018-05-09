@@ -2,6 +2,13 @@ import urllib, urllib2, json, re
 from collections import namedtuple
 import domain.localizations as loc
 
+def refresh_url(old_url):
+    try :
+        response = urllib2.urlopen(old_url)
+        return response.url
+    except :
+        return None
+
 def sparql_get(query):
     parameters = [('query', query)]
     headers = [Header('Accept', 'application/sparql-results+json')]

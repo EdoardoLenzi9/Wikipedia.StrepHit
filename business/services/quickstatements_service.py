@@ -10,6 +10,7 @@ from domain.mapping import LinkMapping
 input_file = loc.input_file 
 output_file = loc.output_file
 error_file = loc.error_file
+log_file = loc.log_file
 total = 0
 index = 0
 
@@ -39,7 +40,31 @@ def export_unmapped_url_list ():
                         file_svc.log(output_file, row)
             except : 
                 file_svc.log(output_file, row)
-                
+
+# refresh remapped urls
+def refresh_urls (domains = []):
+    foreach_domain = len(domains) > 0 
+    if not file_svc.exists(input_file) :
+        raise Exception("file: {0} not found".format(input_file))
+
+    with open(input_file) as file:
+        rows = file.readlines() 
+        total = len(rows)
+        index = 0
+        for row in rows:
+            index += 1
+            progress(index, total)
+            try :
+                sitelink = url_svc.get_link(row)
+                if sitelink != None :
+                    if foreach_domain or (url_svc.get_domain(sitelink) in domains):
+                        current_url = url_svc.refresh_url(sitelink)
+                        row = row.replace(sitelink, current_url)
+                file_svc.log(output_file, row)
+                file_svc.log(log_file, "mapped \t {0} \t to \t {1}".format(sitelink, current_url))
+            except : 
+                file_svc.log(error_file, "error at row: {0}".format(row))
+
 def add_db_references_async (isAsyncMode = loc.IS_ASYNC_MODE):
     global total
     if not file_svc.exists(loc.input_file) :

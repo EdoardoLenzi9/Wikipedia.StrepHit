@@ -3,23 +3,23 @@ import business.services.file_service as file_svc
 import business.services.url_service as url_svc
 import domain.localizations as loc 
 
-def add_mapping(domain, source, target, export_mappings=True):
+def add_mapping(domain, source, target, export=True):
     if domain != None :
         domain = domain.encode('ascii').replace("/", "")
     if target.get(domain) == None : 
-        target[domain] = [source]   
+        target[domain] = [source]
     elif source not in target[domain]:                         
         target[domain].append(source)
-    if(export_mappings):
+    if export:
         export_mappings()
 
 def add_source(domain, source, export_mappings=True):
-    if (source.url_pattern != None) :
+    if source.url_pattern != None :
         source.url_pattern = source.url_pattern.encode('ascii')
     add_mapping(domain, source, SOURCE_MAPPING, export_mappings)
 
 def add_unknown_source(domain, unknown_source, export_mappings=True):
-    if (unknown_source != None) :
+    if unknown_source != None :
         unknown_source = unknown_source.encode('ascii')
     add_mapping(domain, unknown_source, UNKNOWN_SOURCE_MAPPING, export_mappings)
 
