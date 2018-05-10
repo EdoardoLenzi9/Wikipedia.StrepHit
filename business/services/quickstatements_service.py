@@ -65,6 +65,7 @@ def refresh_urls (domains = []):
                         elif loc.DELETE_ROW :
                             row = row.replace("S854\t{0}".format(sitelink), current_url)
                             file_svc.log(log_file, "deleted row (because link isn't active): \t {0}".format(row))
+                row = row.replace("\n", "")
                 file_svc.log(output_file, row)
             except : 
                 file_svc.log(error_file, "error at row: {0}".format(row))
