@@ -81,6 +81,7 @@ SOURCE_MAPPING = {
     "structurae.net": [ LinkMapping("Q1061861", "S2418", "https://structurae.de/personen/$1") ],
     "vocab.getty.edu": [ LinkMapping("Q2494649", "S245", "http://vocab.getty.edu/page/ulan/$1") ],
     "www.bbc.co.uk": [ LinkMapping("Q7257339", "S1367", "https://artuk.org/discover/artworks/search/actor:$1") ],
+    "artuk.org": [ LinkMapping("Q7257339", "S1367", "https://artuk.org/discover/artists/$1") ],
     "www.genealogics.org": [ LinkMapping("Q19847326", "S1819", "http://www.genealogics.org/getperson.php?personID=$1&tree=LEO") ],
     "www.museothyssen.org": [ LinkMapping("Q176251", "S2431", "http://www.museothyssen.org/en/thyssen/ficha_artista/$1") ],
     "www.newulsterbiography.co.uk": [ LinkMapping("Q21814517", "S2029", "http://www.newulsterbiography.co.uk/index.php/home/viewPerson/$1") ],
