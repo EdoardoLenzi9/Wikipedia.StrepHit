@@ -2,7 +2,6 @@ import json
 import business.utils.file_utils as file_utils
 import business.utils.url_utils as url_utils
 import domain.localizations as loc 
-from enum import Enum
 
 class LinkMapping(object):
     db_id = None
