@@ -1,4 +1,4 @@
-import os
+import os, json
 from shutil import copyfile
 
 BACKUP_EXTENSION = "backup"
@@ -52,3 +52,7 @@ def fast_restore(source):
         rename(backup_file, source)
     except :
         print("fast_restore error, file not found: {0}".format(source))
+
+def export(file, obj, mode = 'w'):
+    serialized_object = json.dumps(obj, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    log(file, serialized_object, mode)

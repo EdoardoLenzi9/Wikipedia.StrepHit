@@ -49,8 +49,7 @@ class Mapping(object) :
         self.add(key, value, export)
 
     def save(self, mode = 'w'):
-        serialized_object = json.dumps(self.__content, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-        file_utils.log(self.__file, serialized_object, mode)
+        file_utils.export(self.__file, self.__content, mode)
 
     def load(self, source_file = None):
         if source_file is None :

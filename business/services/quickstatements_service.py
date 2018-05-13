@@ -3,9 +3,10 @@ import domain.localizations as loc
 import business.utils.url_utils as url_utils
 import business.queries.sitelink_queries as query
 import business.utils.file_utils as file_utils
+import business.utils.quickstatememnts_utils as qs_utils
 from business.mapping import Mapping, LinkMapping
 from business.quickstatement import QuickStatement
-import business.utils.quickstatememnts_utils as qs_utils
+
 
 class QuickStatementsService(object):
 
@@ -96,6 +97,7 @@ class QuickStatementsService(object):
             elif len(self.domains) == 0 or (qs.domain in self.domains):
                 if qs.refresh():
                     self.__refreshed_urls[old_sitelink] = qs.sitelink
+                    file_utils.export(loc.refreshed_urls_file, self.__refreshed_urls)
                 elif loc.DELETE_ROW :
                     qs.delete_sitelink()
             file_utils.log(loc.output_file, qs.serialize())
