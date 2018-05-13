@@ -1,4 +1,4 @@
-import business.services.url_service as url_svc
+import business.utils.url_utils as url_utils
 import re
 
 def get_item(domain):
@@ -25,4 +25,4 @@ def get_item(domain):
         '''.replace('\n',' ').replace('{0}', domain)
     query =  re.sub(' +',' ',query)
 
-    return url_svc.sparql_get(query)
+    return url_utils.sparql_get(query)
