@@ -6,6 +6,7 @@ import domain.localizations as loc
 from business.services.quickstatements_service import QuickStatementsService 
 from business.quickstatement import QuickStatement
 import business.utils.quickstatememnts_utils as qs_utils 
+
 class QueriesTest(unittest.TestCase):
     
     def test_sparql_query(self):
