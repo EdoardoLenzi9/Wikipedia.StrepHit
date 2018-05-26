@@ -1,0 +1,8 @@
+README.md
+main.py
+Wikipedia.StrepHit.egg-info/PKG-INFO
+Wikipedia.StrepHit.egg-info/SOURCES.txt
+Wikipedia.StrepHit.egg-info/dependency_links.txt
+Wikipedia.StrepHit.egg-info/entry_points.txt
+Wikipedia.StrepHit.egg-info/requires.txt
+Wikipedia.StrepHit.egg-info/top_level.txt
