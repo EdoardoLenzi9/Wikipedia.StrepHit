@@ -1,5 +1,6 @@
 README.md
 main.py
+strephit.py
 Wikipedia.StrepHit.egg-info/PKG-INFO
 Wikipedia.StrepHit.egg-info/SOURCES.txt
 Wikipedia.StrepHit.egg-info/dependency_links.txt
