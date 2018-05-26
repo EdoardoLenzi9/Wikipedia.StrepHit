@@ -22,7 +22,6 @@ def backup(source):
     except :
         print("copy error, file not found: {0}".format(source))
 
-
 def restore(source):
     backup_file = "{0}.{1}".format(source, BACKUP_EXTENSION)
     try :
@@ -32,7 +31,6 @@ def restore(source):
         os.remove(backup_file)
     except :
         print("restore error with file: {0}".format(source))
-
 
 def rename(old, new):
     os.rename(old, new)

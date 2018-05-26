@@ -7,6 +7,7 @@ class LinkMapping(object):
     db_id = None
     db_property = None
     url_pattern = None
+    to_upper_case = False
     
     def __eq__(self, other):
         if self.db_id == other.db_id and self.db_property == other.db_property and self.url_pattern == other.url_pattern :
@@ -17,15 +18,15 @@ class LinkMapping(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def __init__(self, db_id = None, db_property = None, url_pattern = None):
+    def __init__(self, db_id = None, db_property = None, url_pattern = None, to_upper_case = False):
         self.db_id = db_id
         self.db_property = db_property
         if url_pattern != None :
             url_pattern = url_pattern.encode('ascii')
         self.url_pattern = url_pattern
+        self.to_upper_case = to_upper_case
 
 class Mapping(object) :
-    # dictionary (key : value = [])
     __content = {} 
     __file = "" 
     __log_file = ""

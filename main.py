@@ -7,7 +7,8 @@ import domain.localizations as loc
 
 print("Procedure started at: {0}".format(qs_utils.get_iso_time()))
 quickStatementsService = QuickStatementsService()
-quickStatementsService.refresh_urls(["www.bbc.co.uk"])
+
+quickStatementsService.refresh_urls()
 
 file_utils.rename(loc.input_file, loc.old_input_file)
 file_utils.rename(loc.output_file, loc.input_file)

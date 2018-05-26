@@ -27,7 +27,6 @@ class QuickStatementsService(object):
                 self.domains = self.__unknown_mappings.get_domains()
 
     # testing
-    
     def get_mappings(self, domain):
         return self.__mappings.get(domain)
     
@@ -63,7 +62,7 @@ class QuickStatementsService(object):
         try: 
             for link_mapping in self.__mappings.get(qs.domain) :
                 if url_utils.validate_url_template(qs.sitelink, link_mapping.url_pattern) : 
-                    content = url_utils.extract_placeholder(link_mapping.url_pattern, qs.sitelink)
+                    content = url_utils.extract_placeholder(link_mapping, qs.sitelink)
                     return qs_utils.db_reference(link_mapping, content)
             if(loc.MAP_ALL_RESPONSES and self.__is_domain_just_mapped(qs)) :
                 return self.__get_db_id(qs.domain)
@@ -177,7 +176,7 @@ class QuickStatementsService(object):
 
             for link_mapping in self.__mappings.get(qs.domain) :
                 if url_utils.validate_url_template(qs.sitelink, link_mapping.url_pattern) : 
-                    content = url_utils.extract_placeholder(link_mapping.url_pattern, qs.sitelink)
+                    content = url_utils.extract_placeholder(link_mapping, qs.sitelink)
                     return qs_utils.db_reference(link_mapping, content)
 
             if len(result) == 0:

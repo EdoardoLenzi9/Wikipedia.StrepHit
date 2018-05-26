@@ -52,9 +52,12 @@ def get_link (row):
         return None
     return link
 
-def extract_placeholder(url_pattern, url): # TODO now this works only for one placeholder ($1)
-    url_pattern = url_pattern.split("$1")
-    return url.replace(url_pattern[0], "").replace(url_pattern[1], "")
+def extract_placeholder(link_mapping, url): # TODO now this works only for one placeholder ($1)
+    url_pattern = link_mapping.url_pattern.split("$1")
+    content = url.replace(url_pattern[0], "").replace(url_pattern[1], "")
+    if link_mapping.to_upper_case:
+        return content.upper()
+    return content
 
 class Header(object):
     key = ""
