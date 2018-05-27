@@ -40,7 +40,7 @@ def export_unmapped():
 
 # uncomment the procedure that you need:
 
-# refresh()
+refresh()
 # add_references()
 # refresh_and_add()
 # export_unmapped()

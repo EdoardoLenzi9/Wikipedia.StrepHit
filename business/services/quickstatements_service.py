@@ -99,7 +99,7 @@ class QuickStatementsService(object):
                     file_utils.export(loc.refreshed_urls_file, self.__refreshed_urls)
                 elif loc.DELETE_ROW and qs.sitelink is None:
                     qs.delete_sitelink()
-                    file_utils.log(loc.deleted_rows_file, qs.serialize())
+                    file_utils.log(loc.deleted_rows_file, "{0} \t old_link \t {1}".format(qs.serialize(), old_sitelink))
                     return
             file_utils.log(loc.output_file, qs.serialize())
  

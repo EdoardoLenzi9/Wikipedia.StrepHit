@@ -21,8 +21,9 @@ class QuickStatement(object):
 
     def refresh(self):
         refreshed_url = url_utils.refresh_url(self.sitelink)
+        old_sitelink = self.sitelink
         self.set_sitelink(refreshed_url)
-        if refreshed_url is not None and refreshed_url != self.sitelink:
+        if refreshed_url is not None and refreshed_url != old_sitelink:
             return True
         return False
     
@@ -31,7 +32,7 @@ class QuickStatement(object):
 
     def set_sitelink(self, sitelink):
         if self.__serialized_object is not None :
-            self.__serialized_object = self.__serialized_object.replace(self.sitelink, sitelink)
+            self.__serialized_object = self.__serialized_object.replace(self.sitelink, sitelink if sitelink is not None else "" )
         self.sitelink = sitelink
         self.domain = url_utils.get_domain(sitelink)
 
