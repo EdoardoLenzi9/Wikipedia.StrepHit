@@ -8,21 +8,21 @@ class QuickStatement(object):
     __serialized_object = None
 
     def __init__(self, serialized_object = None, link = None):
-        if serialized_object != None:
+        if serialized_object is not None:
             self.__serialized_object = serialized_object.replace("\n", "")
             self.sitelink = url_utils.get_link(serialized_object)
-            if self.sitelink == None:
+            if self.sitelink is None:
                 file_utils.log(loc.error_file, "No sitelink at line \t {0}".format(serialized_object))
             self.domain = url_utils.get_domain(self.sitelink)
-            if self.domain == None:
+            if self.domain is None:
                 file_utils.log(loc.error_file, "No domain at line \t {0}".format(serialized_object))
-        if link != None:
+        if link is not None:
             self.set_sitelink(link)
 
     def refresh(self):
         refreshed_url = url_utils.refresh_url(self.sitelink)
-        if refreshed_url != None and refreshed_url != self.sitelink:
-            self.set_sitelink(refreshed_url)
+        self.set_sitelink(refreshed_url)
+        if refreshed_url is not None and refreshed_url != self.sitelink:
             return True
         return False
     
@@ -30,7 +30,7 @@ class QuickStatement(object):
         return self.__serialized_object
 
     def set_sitelink(self, sitelink):
-        if self.__serialized_object != None :
+        if self.__serialized_object is not None :
             self.__serialized_object = self.__serialized_object.replace(self.sitelink, sitelink)
         self.sitelink = sitelink
         self.domain = url_utils.get_domain(sitelink)

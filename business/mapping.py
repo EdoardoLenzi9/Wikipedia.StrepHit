@@ -21,7 +21,7 @@ class LinkMapping(object):
     def __init__(self, db_id = None, db_property = None, url_pattern = None, to_upper_case = False):
         self.db_id = db_id
         self.db_property = db_property
-        if url_pattern != None :
+        if url_pattern is not None :
             url_pattern = url_pattern.encode('ascii')
         self.url_pattern = url_pattern
         self.to_upper_case = to_upper_case
@@ -37,7 +37,7 @@ class Mapping(object) :
         self.__log_file = log_file
     
     def add(self, key, value, export=True):
-        if self.__content.get(key) == None : 
+        if self.__content.get(key) is None : 
             self.__content[key] = [value]
         elif value not in self.__content[key]:                         
             self.__content[key].append(value)
@@ -45,7 +45,7 @@ class Mapping(object) :
             self.save()
     
     def add_domain(self, key, value, export=True):
-        if key != None :
+        if key is not None :
             key.encode('ascii').replace("/", "")
         self.add(key, value, export)
 
@@ -75,9 +75,9 @@ class Mapping(object) :
         return self.__content.keys()
 
     def get(self, item):
-        if item != None and self.contains(item):
+        if item is not None and self.contains(item):
             return self.__content[item]
         return []
 
     def contains(self, item):
-        return self.__content.get(item) != None
+        return self.__content.get(item) is not None

@@ -169,9 +169,9 @@
         {
             "db_id": "Q1464063", 
             "db_property": "S1882", 
-            "to_upper_case": true, 
+            "to_upper_case": false, 
             "url_pattern": "http://www.wga.hu/bio/j/$1/biograph.html"
-        } 
+        }
     ], 
     "yba.llgc.org.uk": [
         {

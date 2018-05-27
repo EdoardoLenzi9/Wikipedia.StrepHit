@@ -34,7 +34,7 @@ class QuickStatementsService(object):
         return self.__unknown_mappings.get(domain)
 
     # wrappers
-    def refresh_urls (self, domains = []):
+    def refresh_urls (self, domains = loc.domains_to_refresh):
         for domain in domains:
             if domain not in self.domains:
                 self.domains.append(domain)
@@ -55,7 +55,7 @@ class QuickStatementsService(object):
         self.__progress()
 
     def generate_db_reference(self, qs):
-        if(qs.domain == None):
+        if(qs.domain is None):
             return qs_utils.db_reference()
         if(self.is_unknown_source(qs)) :
             return self.__get_db_id(qs.domain)
@@ -90,20 +90,22 @@ class QuickStatementsService(object):
     def __refresh_urls_handler(self, qs): 
         self.__progress()
         old_sitelink = qs.sitelink
-        if qs.sitelink != None :
-            if self.__refreshed_urls.get(qs.sitelink) != None :
+        if qs.sitelink is not None :
+            if self.__refreshed_urls.get(qs.sitelink) is not None :
                 qs.set_sitelink(self.__refreshed_urls.get(qs.sitelink))
             elif len(self.domains) == 0 or (qs.domain in self.domains):
                 if qs.refresh():
                     self.__refreshed_urls[old_sitelink] = qs.sitelink
                     file_utils.export(loc.refreshed_urls_file, self.__refreshed_urls)
-                elif loc.DELETE_ROW :
+                elif loc.DELETE_ROW and qs.sitelink is None:
                     qs.delete_sitelink()
+                    file_utils.log(loc.deleted_rows_file, qs.serialize())
+                    return
             file_utils.log(loc.output_file, qs.serialize())
  
     def __export_unmapped_url_list_handler(self, qs):
         self.__progress()
-        if qs.sitelink != None :
+        if qs.sitelink is not None :
             is_not_mapped = True
             for link_mapping in self.__mappings.get(qs.domain):
                 if qs.validate(link_mapping.url_pattern):
@@ -112,7 +114,7 @@ class QuickStatementsService(object):
                 file_utils.log(loc.output_file, qs.sitelink)
 
     def __add_db_references_async_handler(self, qs):
-        if qs.sitelink != None :
+        if qs.sitelink is not None :
             if(loc.IS_ASYNC_MODE):
                 thread = threading.Thread(target=self.generate_db_reference_wrapper, args=(qs))
                 thread.daemon = True
@@ -214,7 +216,7 @@ class QuickStatementsService(object):
             print ("\n warning: [shuld never happen error] loader-bar error count \t {0} \t total {1} \n".format(self.index, self.total))
 
     def is_unknown_source(self, qs):
-        if self.__unknown_mappings.get(qs.domain) != None : 
+        if self.__unknown_mappings.get(qs.domain) is not None : 
             for unknown_source in self.__unknown_mappings.get(qs.domain):
                 if unknown_source in qs.sitelink: 
                     return True
@@ -222,7 +224,7 @@ class QuickStatementsService(object):
 
     def __get_db_id(self, domain):
         for mapping_entry in self.__mappings.get(domain) :
-            if mapping_entry.db_id != None :
+            if mapping_entry.db_id is not None :
                 return qs_utils.db_reference(LinkMapping(db_id=mapping_entry.db_id))
         return qs_utils.db_reference()
 

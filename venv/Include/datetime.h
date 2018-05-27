@@ -65,7 +65,7 @@ typedef struct
 
 /* All time objects are of PyDateTime_TimeType, but that can be allocated
  * in two ways, with or without a tzinfo member.  Without is the same as
- * tzinfo == None, but consumes less memory.  _PyDateTime_BaseTime is an
+ * tzinfo is None, but consumes less memory.  _PyDateTime_BaseTime is an
  * internal struct used to allocate the right amount of space for the
  * "without" case.
  */

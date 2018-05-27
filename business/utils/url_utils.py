@@ -28,7 +28,7 @@ def http_call(base_url, parameters, method = "GET", headers = []):
     return urllib2.urlopen(request).read()
 
 def get_domain (url):
-    if url != None:
+    if url is not None:
         domain = url.split("//")[-1].split("/")[0].split('?')[0]
         if domain == "" :
             return None
@@ -37,7 +37,7 @@ def get_domain (url):
     return None
 
 def validate_url_template(sitelink, url_pattern): # TODO handle cases with more than one placeholder ($1)
-    if(url_pattern == None) :
+    if(url_pattern is None) :
         return False
     pattern = re.compile(re.escape(url_pattern.encode('ascii')).replace("\\$1", ".*"))
     if(pattern.match(sitelink)):

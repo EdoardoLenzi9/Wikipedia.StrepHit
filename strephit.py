@@ -1,17 +1,5 @@
 import click
-import business.utils.quickstatememnts_utils as qs_utils
-from business.services.quickstatements_service import QuickStatementsService
-import business.utils.file_utils as file_utils
-import domain.localizations as loc
-
-quickStatementsService = QuickStatementsService()
-
-def launch_method(name, method):
-    print('start -> {0}\n'.format(name))
-    print("Procedure started at: {0}\n".format(qs_utils.get_iso_time()))
-    method()
-    print("Procedure ended at: {0}\n".format(qs_utils.get_iso_time()))
-    print('end -> {0}\n'.format(name))
+import main
 
 @click.group(help='''
 Simple script in python 2.7 that adds references to a wikidata .qs dump.\n
@@ -41,33 +29,19 @@ def cli():
 
 @click.command(help="Refresh URLs of your .qs input dump, for each row check if 'reference URL' (P854) is reachable and, in case of redirect, updates it")
 def refresh():
-    launch_method("Refresh urls", quickStatementsService.refresh_urls)
+    main.refresh() 
 
 @click.command(help="For each row of your .qs input dump analyzes 'reference URL' (P854) property and generate a 'stated in' (P248) propery (where possible)")
 def add_references():
-    launch_method("Add references", quickStatementsService.add_db_references_async())
+    main.add_references() 
 
 @click.command(help="Calls sequentially refresh and add_references commands") 
 def refresh_and_add():
-    print("start -> Refresh urls and add references\n")
-    print('start -> Refresh urls\n')
-    print("Procedure started at: {0}\n".format(qs_utils.get_iso_time()))
-    quickStatementsService.refresh_urls()
-    print("Procedure ended at: {0}\n".format(qs_utils.get_iso_time()))
-    print('end -> Refresh urls\n')    
-
-    file_utils.rename(loc.input_file, loc.old_input_file)
-    file_utils.rename(loc.output_file, loc.input_file)
-
-    print('start -> Add references\n')
-    print("Procedure started at: {0}\n".format(qs_utils.get_iso_time()))
-    quickStatementsService.add_db_references_async()
-    print("Procedure ended at: {0}\n".format(qs_utils.get_iso_time()))
-    print('end -> Add references\n')    
+    main.refresh_and_add() 
 
 @click.command(help="For each row of your .qs input dump checks if 'reference URL' (P854) is just mapped in your mapping files (and logs if not)")
 def export_unmapped():
-    launch_method("Export unmapped urls list", quickStatementsService.export_unmapped_url_list())
+    main.export_unmapped()
 
 cli.add_command(refresh)  
 cli.add_command(add_references)
