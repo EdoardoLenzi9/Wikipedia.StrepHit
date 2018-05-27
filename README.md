@@ -3,7 +3,7 @@
 simple script in python 2.7 that adds references to a wikidata .qs dump 
 
 ## StartUp 
-### Launch main.py
+### Launch directly main.py
 This is the most direct way to start (and debug) the script, customize main.py as you want and launch: 
 ```sh
     sh compile.sh
@@ -15,7 +15,7 @@ or
     python main.py
 ```
 
-### Launch using Click and Virtualenv
+### Launch using [Click](http://click.pocoo.org/5/quickstart/) and [Virtualenv](https://virtualenv.pypa.io/en/stable/)
 #### Install Click and Virtualenv
 ```sh
     python -m pip install virtualenv
@@ -69,7 +69,7 @@ Usage: strephit [OPTIONS] COMMAND [ARGS]...
 
       * (bool) IS_ASYNC_MODE: when you call add_references procedure,processes each row on a new thread.
 
-      * (bool) DELETE_ROW when you call: refresh procedure, deletes rows with unrechable 'reference URL' (P854).
+      * (bool) DELETE_ROW: when you call refresh procedure, deletes rows with unrechable 'reference URL' (P854).
 
       * (bool) REFRESH_UNKNOWN_DOMAINS: when you call refresh procedure, replaces old urls with updated urls in case of site redirection.
 
