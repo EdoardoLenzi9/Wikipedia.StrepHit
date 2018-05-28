@@ -5,3 +5,4 @@ assets/supervised_dataset_unknown_mappings.json
 assets/supervised_dataset_errors.log
 assets/supervised_dataset_deleted_rows.log
 assets/supervised_dataset_refreshed_urls.json
+*.backup

@@ -19,6 +19,24 @@ class QueriesTest(unittest.TestCase):
 
 class UrlSvcTest(unittest.TestCase):
     
+    def test_bug_on_url_refresh(self):
+        # Arrange
+        # url = 'http://vocab.getty.edu/ulan/500122964'
+        url = 'http://vocab.getty.edu/ulan/500122964'
+
+        # Act 
+        refreshed_url = url_utils.refresh_url(url)
+        
+        # Assert
+        self.assertEqual(refreshed_url, url)
+
+    def test_build_query_url(self):
+        # Arrange
+        base_url = "https://collection.britishmuseum.org/resource/"
+        query = {"uri" : "http://collection.britishmuseum.org/id/person-institution/143629"}
+        url = url_utils.build_query_url(base_url, query);
+        self.assertEqual(url, "https://collection.britishmuseum.org/resource/?uri=http%3A%2F%2Fcollection.britishmuseum.org%2Fid%2Fperson-institution%2F143629")
+
     def test_validate_url_template(self):
         # Arrange
         sitelink = "http://sculpture.gla.ac.uk/view/person.php?id=msib3_1266502314"

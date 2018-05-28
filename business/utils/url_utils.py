@@ -1,6 +1,7 @@
 import urllib, urllib2, json, re
 from collections import namedtuple
 import domain.localizations as loc
+from requests.utils import quote
 
 def refresh_url(old_url):
     try :
@@ -58,6 +59,18 @@ def extract_placeholder(link_mapping, url): # TODO now this works only for one p
     if link_mapping.to_upper_case:
         return content.upper()
     return content
+
+def build_query_url(base_url, query_parameters):
+    url = "{0}?".format(base_url)
+    for key, value in query_parameters.iteritems():
+        url = "{0}{1}={2}&".format(url, key, percent_encoding(value))
+    return url[:-1]
+
+def percent_encoding(query):
+    return quote(query, safe='')
+
+def to_https(http_url):
+    return http_url.replace("http:", "https:")
 
 class Header(object):
     key = ""

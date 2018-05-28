@@ -3,9 +3,16 @@ from shutil import copyfile
 
 BACKUP_EXTENSION = "backup"
 
+# on file
 def log(file, text, access_method = 'ab+'):
     with open(file, access_method) as f:
         f.write("{0}\n".format(text))
+
+# in memory 
+output = ""
+def log_in_memory(file, text, access_method = 'ab+'):
+    global output
+    output = "{0}{1}\n".format(output, text)
 
 def exists(file):
     return os.path.isfile(file)

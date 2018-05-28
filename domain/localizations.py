@@ -22,14 +22,11 @@ IS_ASYNC_MODE = False           # when you call add_references procedure,process
 DELETE_ROW = True               # when you call refresh procedure, deletes rows with unrechable 'reference URL' (P854) (must have stable internet connection!)
 REFRESH_UNKNOWN_DOMAINS = True  # when you call refresh procedure, replaces old urls with updated urls in case of site redirection.
 
-domains_to_refresh = [  "www.bbc.co.uk", 
-                        "www.wga.hu", 
-                        "www.metal-archives.com", 
+domains_to_refresh = [  "www.bbc.co.uk",  
                         "archive.org", 
                         "artuk.org", 
-                        "collection.britishmuseum.org", 
-                        "en.wikisource.org", 
-                        "vocab.getty.edu",
-                        "www.brown.edu",
-                        "www.daao.org.au"
+                    ]
+
+domains_to_https =  [   "www.metal-archives.com",
+                        "www.wga.hu"
                     ]

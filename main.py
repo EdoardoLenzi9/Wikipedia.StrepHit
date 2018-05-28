@@ -38,9 +38,16 @@ def refresh_and_add():
 def export_unmapped():
     launch_method("Export unmapped urls list", quickStatementsService.export_unmapped_url_list())
 
-# uncomment the procedure that you need:
+def refresh_urls_to_https():
+    launch_method("Refresh urls to https", quickStatementsService.refresh_urls_to_https())
 
-refresh()
+def refresh_urls_as_query_params():
+    launch_method("Refresh urls as query params", quickStatementsService.refresh_urls_as_query_params())
+
+# uncomment the procedure that you need:
+# refresh_urls_as_query_params()
+# refresh_urls_to_https()
+# refresh()
 # add_references()
 # refresh_and_add()
 # export_unmapped()

@@ -38,8 +38,16 @@ class QuickStatementsService(object):
         for domain in domains:
             if domain not in self.domains:
                 self.domains.append(domain)
-
         self. __rows_cycle(self.__refresh_urls_handler)
+
+    def refresh_urls_to_https (self, domains = loc.domains_to_https):
+        for domain in domains:
+            if domain not in self.domains:
+                self.domains.append(domain)
+        self. __rows_cycle(self.__refresh_urls_to_https_handler)
+
+    def refresh_urls_as_query_params (self):
+        self. __rows_cycle(self.__refresh_urls_as_query_params_handler)
 
     def export_unmapped_url_list (self):
         self. __rows_cycle(self.__export_unmapped_url_list_handler)
@@ -50,7 +58,7 @@ class QuickStatementsService(object):
     def generate_db_reference_wrapper(self, qs):  
         reference = self.generate_db_reference(qs)
         qs.append(reference)
-        file_utils.log(loc.output_file, qs.serialize())
+        file_utils.log_in_memory(loc.output_file, qs.serialize())
         self.__export_mappings()
         self.__progress()
 
@@ -85,8 +93,25 @@ class QuickStatementsService(object):
                     handler(qs)
                 except : 
                     file_utils.log(loc.error_file, "Error at row: {0}".format(row))
+            file_utils.log(loc.output_file, file_utils.output)
 
     # handlers
+    def __refresh_urls_as_query_params_handler(self, qs): 
+        self.__progress()
+        if qs.sitelink is not None :
+            if qs.domain == "collection.britishmuseum.org" :
+                base_url = "https://collection.britishmuseum.org/resource/"
+                query = {"uri" : qs.sitelink}
+                qs.set_sitelink(url_utils.build_query_url(base_url, query))
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
+
+    def __refresh_urls_to_https_handler(self, qs): 
+        self.__progress()
+        if qs.sitelink is not None :
+            if qs.domain in self.domains:
+                qs.set_sitelink(url_utils.to_https(qs.sitelink))
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
+
     def __refresh_urls_handler(self, qs): 
         self.__progress()
         old_sitelink = qs.sitelink
@@ -101,7 +126,7 @@ class QuickStatementsService(object):
                     qs.delete_sitelink()
                     file_utils.log(loc.deleted_rows_file, "{0} \t old_link \t {1}".format(qs.serialize(), old_sitelink))
                     return
-            file_utils.log(loc.output_file, qs.serialize())
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
  
     def __export_unmapped_url_list_handler(self, qs):
         self.__progress()
@@ -111,7 +136,7 @@ class QuickStatementsService(object):
                 if qs.validate(link_mapping.url_pattern):
                     is_not_mapped = False
             if is_not_mapped :
-                file_utils.log(loc.output_file, qs.sitelink)
+                file_utils.log_in_memory(loc.output_file, qs.sitelink)
 
     def __add_db_references_async_handler(self, qs):
         if qs.sitelink is not None :
