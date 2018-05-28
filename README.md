@@ -2,8 +2,22 @@
 
 simple script in python 2.7 that adds references to a wikidata .qs dump 
 
-## StartUp 
-### Launch directly main.py
+# Official Project Page
+[https://meta.wikimedia.org/wiki/Grants:IEG/StrepHit:_Wikidata_Statements_Validation_via_References](https://meta.wikimedia.org/wiki/Grants:IEG/StrepHit:_Wikidata_Statements_Validation_via_References)
+
+# Documentation
+[https://www.mediawiki.org/wiki/StrepHit](https://www.mediawiki.org/wiki/StrepHit)
+
+# Features
+* Refresh urls
+    * Refresh urls in case of redirection
+    * Refresh urls to https
+    * Refresh urls as query params
+* Add references
+* Export unmapped urls list
+
+# Get Ready
+## Launch directly main.py
 This is the most direct way to start (and debug) the script, customize main.py as you want and launch: 
 ```sh
     sh compile.sh
@@ -15,21 +29,13 @@ or
     python main.py
 ```
 
-### Launch using [Click](http://click.pocoo.org/5/quickstart/) and [Virtualenv](https://virtualenv.pypa.io/en/stable/)
-#### Install Click and Virtualenv
-```sh
-    python -m pip install virtualenv
-    python -m pip install Click
+## Click and Virtualenv
+* Install [Python 2.7](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/)
+* Clone the repository and install requirements.txt (preferably in a [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/))
 ```
-
-#### Enable execution of PowerShell scripts
-```sh
-    set-executionpolicy remotesigned
-```
-
-#### Activate venv
-```sh
-    venv\scripts\activate
+    $ git clone https://github.com/EdoardoLenzi9/Wikipedia.StrepHit.git
+    $ cd Wikipedia.StrepHit
+    $ pip install -r requirements.txt
 ```
 
 #### Launch script
