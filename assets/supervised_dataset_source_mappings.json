@@ -79,14 +79,6 @@
             "url_pattern": "https://rkd.nl/en/explore/artists/$1"
         }
     ], 
-    "sculpture.gla.ac.uk": [
-        {
-            "db_id": "Q6754185", 
-            "db_property": "S2914", 
-            "to_upper_case": false, 
-            "url_pattern": "http://sculpture.gla.ac.uk/view/person.php?id=$1"
-        }
-    ], 
     "structurae.net": [
         {
             "db_id": "Q1061861", 

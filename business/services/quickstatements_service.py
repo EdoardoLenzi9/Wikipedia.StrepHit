@@ -1,245 +1,259 @@
-import os, datetime, re, time, sys, threading
-import domain.mapping as mapping
+import re, time, sys, threading
 import domain.localizations as loc
-import business.services.url_service as url_svc
+import business.utils.url_utils as url_utils
 import business.queries.sitelink_queries as query
-import business.services.file_service as file_svc
-from domain.mapping import LinkMapping
+import business.utils.file_utils as file_utils
+import business.utils.quickstatememnts_utils as qs_utils
+from business.mapping import Mapping, LinkMapping
+from business.quickstatement import QuickStatement
 
-# constants
-input_file = loc.input_file 
-output_file = loc.output_file
-error_file = loc.error_file
-log_file = loc.log_file
-total = 0
-index = 0
 
-# list of unmapped url
-def export_unmapped_url_list ():
-    if not file_svc.exists(input_file) :
-        raise Exception("file: {0} not found".format(input_file))
+class QuickStatementsService(object):
 
-    mapping.import_mappings()
+    def __init__(self):
+        self.__total = 0
+        self.__index = 0
+        self.__mappings = Mapping(loc.mapping_file, loc.error_file)
+        self.__unknown_mappings = Mapping(loc.unknown_mapping_file, loc.error_file)
+        self.__refreshed_urls = {}
+        self.domains = []
+        self.domains_just_mapped = []
+        self.__mappings.load(loc.source_mapping_file)
+        if loc.LOAD_MAPPINGS:
+            self.__mappings.load(loc.source_mapping_file)
+            self.__mappings.load()
+            self.__unknown_mappings.load()
+            if loc.REFRESH_UNKNOWN_DOMAINS :
+                self.domains = self.__unknown_mappings.get_domains()
 
-    with open(input_file) as file:
-        rows = file.readlines() 
-        total = len(rows)
-        index = 0
-        for row in rows:
-            index += 1
-            progress(index, total)
-            try :
-                sitelink = url_svc.get_link(row)
-                if sitelink != None :
-                    domain = url_svc.get_domain(sitelink)
-                    is_not_mapped = True
-                    for link_mapping in mapping.SOURCE_MAPPING[domain] :
-                        if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) :
-                            is_not_mapped = False
-                    if(is_not_mapped) :
-                        file_svc.log(output_file, row)
-            except : 
-                file_svc.log(output_file, row)
+    # testing
+    def get_mappings(self, domain):
+        return self.__mappings.get(domain)
+    
+    def get_unknown_mappings(self, domain):
+        return self.__unknown_mappings.get(domain)
 
-# refresh remapped urls
-def refresh_urls (domains = []):
-    foreach_domain = len(domains) == 0 
-    if not file_svc.exists(input_file) :
-        raise Exception("file: {0} not found".format(input_file))
+    # wrappers
+    def refresh_urls (self, domains = loc.domains_to_refresh):
+        for domain in domains:
+            if domain not in self.domains:
+                self.domains.append(domain)
+        self. __rows_cycle(self.__refresh_urls_handler)
 
-    with open(input_file) as file:
-        rows = file.readlines() 
-        total = len(rows)
-        index = 0
-        for row in rows:
-            index += 1
-            progress(index, total)
-            try :
-                sitelink = url_svc.get_link(row)
-                if sitelink != None :
-                    if foreach_domain or (url_svc.get_domain(sitelink) in domains):
-                        current_url = url_svc.refresh_url(sitelink)
-                        if current_url != None :
-                            row = row.replace(sitelink, current_url)
-                            file_svc.log(log_file, "mapped \t {0} \t to \t {1}".format(sitelink, current_url))
-                        elif loc.DELETE_ROW :
-                            row = row.replace("S854\t{0}".format(sitelink), current_url)
-                            file_svc.log(log_file, "deleted row (because link isn't active): \t {0}".format(row))
-                row = row.replace("\n", "")
-                file_svc.log(output_file, row)
-            except : 
-                file_svc.log(error_file, "error at row: {0}".format(row))
+    def refresh_urls_to_https (self, domains = loc.domains_to_https):
+        for domain in domains:
+            if domain not in self.domains:
+                self.domains.append(domain)
+        self. __rows_cycle(self.__refresh_urls_to_https_handler)
 
-def add_db_references_async (isAsyncMode = loc.IS_ASYNC_MODE):
-    global total
-    if not file_svc.exists(loc.input_file) :
-        raise Exception("file: {0} not found".format(input_file))
+    def refresh_urls_as_query_params (self):
+        self. __rows_cycle(self.__refresh_urls_as_query_params_handler)
 
-    mapping.import_mappings()
+    def export_unmapped_url_list (self):
+        self. __rows_cycle(self.__export_unmapped_url_list_handler)
 
-    with open(input_file) as file:
-        rows = file.readlines() 
-        total = len(rows)
-        for row in rows:
-            progress(index, total)
-            try:  
-                sitelink = url_svc.get_link(row)
-                if sitelink != None :
-                    if(isAsyncMode):
-                        thread = threading.Thread(target=generate_db_reference_wrapper, args=(row, sitelink))
-                        thread.daemon = True
-                        thread.start()                       
-                    else :
-                        generate_db_reference_wrapper(row, sitelink)
-                else :
-                    file_svc.log(error_file, "No sitelink at line \t {0}".format(row))
-            except :
-                file_svc.log(error_file, 'An error occurs reading {0} file, at line: \n {1} \n'.format(input_file, row))
+    def add_db_references_async (self):
+        self. __rows_cycle(self.__add_db_references_async_handler)   
 
-def generate_db_reference_wrapper(row, sitelink):  
-    global index           
-    reference = generate_db_reference(sitelink)
-    if(reference == "") :
-        reference = "S813\t{0}".format(get_iso_time())
-    row = row.replace("\n", "")
-    file_svc.log(output_file, "{0}\t{1}".format(row, reference))
-    mapping.export_mappings()
-    index += 1
-    progress(index, total)
+    def generate_db_reference_wrapper(self, qs):  
+        reference = self.generate_db_reference(qs)
+        qs.append(reference)
+        file_utils.log_in_memory(loc.output_file, qs.serialize())
+        self.__export_mappings()
+        self.__progress()
 
-def generate_db_reference(sitelink, map_all_responses = loc.MAP_ALL_RESPONSES):
-    domain = url_svc.get_domain(sitelink)
-    if(domain == ""):
-        return ""
-    if(is_unknown_source(domain, sitelink)) :
-        return get_db_id(domain)
-    try: 
-        for link_mapping in mapping.SOURCE_MAPPING[domain] :
-            if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) : #todo case like more than one $1
-                content = url_svc.extract_placeholder(link_mapping.url_pattern, sitelink)
-                return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
-        if(map_all_responses and is_domain_just_mapped(domain)) :
-            return get_db_id(domain)
-        raise Exception("mapping not found ")
-    except : 
-        if map_all_responses:
-            return mapping_all(domain, sitelink)
-        return new_mapping(domain, sitelink)
+    def generate_db_reference(self, qs):
+        if(qs.domain is None):
+            return qs_utils.db_reference()
+        if(self.is_unknown_source(qs)) :
+            return self.__get_db_id(qs.domain)
+        try: 
+            for link_mapping in self.__mappings.get(qs.domain) :
+                if url_utils.validate_url_template(qs.sitelink, link_mapping.url_pattern) : 
+                    content = url_utils.extract_placeholder(link_mapping, qs.sitelink)
+                    return qs_utils.db_reference(link_mapping, content)
+            if(loc.MAP_ALL_RESPONSES and self.__is_domain_just_mapped(qs)) :
+                return self.__get_db_id(qs.domain)
+            raise Exception("mapping not found")
+        except : 
+            if loc.MAP_ALL_RESPONSES:
+                return self.__mapping_all(qs)
+            return self.__new_mapping(qs)
 
-def is_domain_just_mapped(domain):
-    if domain not in mapping.DOMAINS_JUST_MAPPED : 
-        return True
-    return False 
+    def __rows_cycle(self, handler):
+        if not file_utils.exists(loc.input_file) :
+            raise Exception("file: {0} not found".format(loc.input_file))
+        with open(loc.input_file) as file:
+            rows = file.readlines() 
+            self.total = len(rows)
+            self.index = 0
+            for row in rows:
+                try :
+                    qs = QuickStatement(row) 
+                    handler(qs)
+                except : 
+                    file_utils.log(loc.error_file, "Error at row: {0}".format(row))
+            file_utils.log(loc.output_file, file_utils.output)
 
-def is_unknown_source(domain, sitelink):
-    if mapping.UNKNOWN_SOURCE_MAPPING.get(domain) != None : 
-        for unknown_source in mapping.UNKNOWN_SOURCE_MAPPING[domain]:
-            if unknown_source in sitelink: 
-                return True
-    return False 
+    # handlers
+    def __refresh_urls_as_query_params_handler(self, qs): 
+        self.__progress()
+        if qs.sitelink is not None :
+            if qs.domain == "collection.britishmuseum.org" :
+                base_url = "https://collection.britishmuseum.org/resource/"
+                query = {"uri" : qs.sitelink}
+                qs.set_sitelink(url_utils.build_query_url(base_url, query))
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
 
-def get_db_id(domain):
-    if mapping.SOURCE_MAPPING.get(domain) != None : 
-        for mapping_entry in mapping.SOURCE_MAPPING[domain] :
-            if mapping_entry.db_id != None :
-                return "S248\t{0}\tS813\t{1}".format(mapping_entry.db_id, get_iso_time())
-    return ""
+    def __refresh_urls_to_https_handler(self, qs): 
+        self.__progress()
+        if qs.sitelink is not None :
+            if qs.domain in self.domains:
+                qs.set_sitelink(url_utils.to_https(qs.sitelink))
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
 
-def mapping_all(domain, sitelink): 
-    if domain not in mapping.DOMAINS_JUST_MAPPED :
-        mapping.DOMAINS_JUST_MAPPED.append(domain)
-    db_id = None
-    try:
-        result = query.get_item(domain) 
+    def __refresh_urls_handler(self, qs): 
+        self.__progress()
+        old_sitelink = qs.sitelink
+        if qs.sitelink is not None :
+            if self.__refreshed_urls.get(qs.sitelink) is not None :
+                qs.set_sitelink(self.__refreshed_urls.get(qs.sitelink))
+            elif len(self.domains) == 0 or (qs.domain in self.domains):
+                if qs.refresh():
+                    self.__refreshed_urls[old_sitelink] = qs.sitelink
+                    file_utils.export(loc.refreshed_urls_file, self.__refreshed_urls)
+                elif loc.DELETE_ROW and qs.sitelink is None:
+                    qs.delete_sitelink()
+                    file_utils.log(loc.deleted_rows_file, "{0} \t old_link \t {1}".format(qs.serialize(), old_sitelink))
+                    return
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
+ 
+    def __export_unmapped_url_list_handler(self, qs):
+        self.__progress()
+        if qs.sitelink is not None :
+            is_not_mapped = True
+            for link_mapping in self.__mappings.get(qs.domain):
+                if qs.validate(link_mapping.url_pattern):
+                    is_not_mapped = False
+            if is_not_mapped :
+                file_utils.log_in_memory(loc.output_file, qs.sitelink)
 
-        for row in result :
-            real_domain = url_svc.get_domain(row.sitelinkLabel.value)
-            db_id = get_identifier(row.subjects.value, "Q")
-            db_property =  get_identifier(row.wikidataProperty.value, "P").replace("P", "S") if hasattr(row, 'wikidataProperty') else None
-            url_pattern = row.formatterUrlLabel.value if  hasattr(row, 'formatterUrlLabel') else None 
-            mapping.add_source(real_domain, LinkMapping(db_id, db_property, url_pattern))
+    def __add_db_references_async_handler(self, qs):
+        if qs.sitelink is not None :
+            if(loc.IS_ASYNC_MODE):
+                thread = threading.Thread(target=self.generate_db_reference_wrapper, args=(qs))
+                thread.daemon = True
+                thread.start()                       
+            else :
+                self.generate_db_reference_wrapper(qs)
 
-        for link_mapping in mapping.SOURCE_MAPPING[domain] :
-            if url_svc.validate_url_template(sitelink, link_mapping.url_pattern) : 
-                content = url_svc.extract_placeholder(link_mapping.url_pattern, sitelink)
-                return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(link_mapping.db_id, link_mapping.db_property, content, get_iso_time())
+    def __new_mapping(self, qs): 
+        db_id = None
+        try:
+            result = query.get_item(qs.domain) 
 
-        if len(result) == 0:
-            mapping.add_unknown_source(domain, domain)
-            return ""
-        raise Exception("db domain not found in wikidata")
-    except : 
-        regex = re.compile("{0}/[^/]+".format(domain))
-        uri = regex.search(sitelink).group(0)  
-        while uri != "" :
-            result = query.get_item(uri)
-            if len(result) == 0 :
-                mapping.add_unknown_source(domain, uri)
-                mapping.add_source(domain, LinkMapping(db_id, None, None))
-                break
-            regex = re.compile("{0}/[^/]+".format(uri))
-            uri = regex.search(sitelink).group(0)  
-        return get_db_id(domain)
+            if len(result) != 0 :
+                if len(result) == 1:
+                    row = result[0]
+                    if not hasattr(row, 'formatterUrlLabel') and hasattr(row, 'sitelinkLabel'):
+                        domain = url_utils.get_domain(row.sitelinkLabel.value)
+                        self.__unknown_mappings.add_domain(domain, domain)
+                        self.__mappings.add_domain(domain, domain)
+                        return self.__get_db_id(domain)
+                for row in result :
+                    db_id = qs_utils.get_identifier(row.subjects.value, "Q")
+                    if hasattr(row, 'wikidataProperty') and hasattr(row, 'formatterUrlLabel') and hasattr(row, 'sitelinkLabel'):
+                        real_domain = url_utils.get_domain(row.sitelinkLabel.value)
+                        db_property = qs_utils.get_identifier(row.wikidataProperty.value, "P").replace("P", "S") 
+                        url_pattern = row.formatterUrlLabel.value
+                        if url_utils.validate_url_template(qs.sitelink, url_pattern) : 
+                            pattern = url_pattern.split("$1")
+                            content = qs.sitelink.replace(pattern[0], "").replace(pattern[1], "")
+                            self.__mappings.add_domain(real_domain, LinkMapping(db_id, db_property, url_pattern))
+                            return qs_utils.db_reference(LinkMapping(db_id, db_property), content)
+            else:
+                self.__unknown_mappings.add_domain(qs.domain, qs.domain)
+                return qs_utils.db_reference()
+            raise Exception("db domain not found in wikidata")
+        except : 
+            regex = re.compile("{0}/[^/]+".format(qs.domain))
+            uri = regex.search(qs.sitelink).group(0)  
+            while uri != "" :
+                result = query.get_item(uri)
+                if len(result) == 0 :
+                    self.__unknown_mappings.add_domain(qs.domain, uri)
+                    self.__mappings.add_domain(qs.domain, LinkMapping(db_id))
+                    break
+                regex = re.compile("{0}/[^/]+".format(uri))
+                uri = regex.search(qs.sitelink).group(0)  
+            return self.__get_db_id(qs.domain)
 
-def new_mapping(domain, sitelink): #mappo solo quello che me lo valida
-    db_id = None
-    try:
-        result = query.get_item(domain) #TODO da ottimizzare per la categoria
+    def __mapping_all(self, qs): 
+        self.domains_just_mapped.append(qs.domain)
+        db_id = None
+        try:
+            result = query.get_item(qs.domain) 
 
-        if len(result) != 0 :
-            if len(result) == 1:
-                row = result[0]
-                if not hasattr(row, 'formatterUrlLabel') and hasattr(row, 'sitelinkLabel'):
-                    domain = url_svc.get_domain(row.sitelinkLabel.value)
-                    mapping.add_unknown_source(domain, domain)
-                    mapping.add_source(domain, domain)
-                    return get_db_id(domain)
             for row in result :
-                db_id = get_identifier(row.subjects.value, "Q")
-                if hasattr(row, 'wikidataProperty') and hasattr(row, 'formatterUrlLabel') and hasattr(row, 'sitelinkLabel'):
-                    real_domain = url_svc.get_domain(row.sitelinkLabel.value)
-                    db_property = get_identifier(row.wikidataProperty.value, "P").replace("P", "S") 
-                    url_pattern = row.formatterUrlLabel.value
-                    if url_svc.validate_url_template(sitelink, url_pattern) : #todo case like more than $1
-                        pattern = url_pattern.split("$1")
-                        content = sitelink.replace(pattern[0], "").replace(pattern[1], "")
-                        mapping.add_source(real_domain, LinkMapping(db_id, db_property, url_pattern))
-                        return "S248\t{0}\t{1}\t\"{2}\"\tS813\t{3}".format(db_id, db_property, content, get_iso_time())
-        if len(result) == 0:
-            mapping.add_unknown_source(domain, domain)
-            return ""
-        raise Exception("db domain not found in wikidata")
-    except : 
-        regex = re.compile("{0}/[^/]+".format(domain))
-        uri = regex.search(sitelink).group(0)  
-        while uri != "" :
-            result = query.get_item(uri)
-            if len(result) == 0 :
-                mapping.add_unknown_source(domain, uri)
-                mapping.add_source(domain, LinkMapping(db_id, None, None))
-                break
-            regex = re.compile("{0}/[^/]+".format(uri))
-            uri = regex.search(sitelink).group(0)  
-        return get_db_id(domain)
+                real_domain = url_utils.get_domain(row.sitelinkLabel.value)
+                db_id = qs_utils.get_identifier(row.subjects.value, "Q")
+                db_property =  qs_utils.get_identifier(row.wikidataProperty.value, "P").replace("P", "S") if hasattr(row, 'wikidataProperty') else None
+                url_pattern = row.formatterUrlLabel.value if  hasattr(row, 'formatterUrlLabel') else None 
+                self.__mappings.add_domain(real_domain, LinkMapping(db_id, db_property, url_pattern))
 
-def get_identifier(url, first_letter) :
-    regex = re.compile(first_letter + ".*")
-    id = regex.search(url).group(0)  
-    if id == "" :
-        return None
-    return id
+            for link_mapping in self.__mappings.get(qs.domain) :
+                if url_utils.validate_url_template(qs.sitelink, link_mapping.url_pattern) : 
+                    content = url_utils.extract_placeholder(link_mapping, qs.sitelink)
+                    return qs_utils.db_reference(link_mapping, content)
 
-def get_iso_time(time = datetime.datetime.now()):
-    return "{0}Z/14".format(time.replace(microsecond=0).isoformat())
+            if len(result) == 0:
+                self.__unknown_mappings.add_domain(qs.domain, qs.domain)
+                return qs_utils.db_reference()
+            raise Exception("db domain not found in wikidata")
+        except : 
+            regex = re.compile("{0}/[^/]+".format(qs.domain))
+            uri = regex.search(qs.sitelink).group(0)  
+            while uri != "" :
+                result = query.get_item(uri)
+                if len(result) == 0 :
+                    self.__unknown_mappings.add_domain(qs.domain, uri)
+                    self.__mappings.add_domain(qs.domain, LinkMapping(db_id))
+                    break
+                regex = re.compile("{0}/[^/]+".format(uri))
+                uri = regex.search(qs.sitelink).group(0)  
+            return self.__get_db_id(qs.domain)
 
-def progress(count, total, suffix=''):
-    bar_len = 60
-    filled_len = int(round(bar_len * count / float(total)))
+    def __export_mappings(self):
+        self.__mappings.save()
+        self.__unknown_mappings.save()
 
-    percents = round(100.0 * count / float(total), 1)
-    bar = '=' * filled_len + '-' * (bar_len - filled_len)
-    try:
-        sys.stdout.write('[%s] %s%s %s Processing line: %s \r' % (bar, percents, '%', suffix, count))
-        sys.stdout.flush()  
-    except :
-        print ("\n warning: [shuld never happen error] loader-bar error count \t {0} \t total {1} \n".format(count, total))
+    def __progress(self, suffix=''):
+        self.index += 1
+        bar_len = 60
+        filled_len = int(round(bar_len * self.index / float(self.total)))
+
+        percents = round(100.0 * self.index / float(self.total), 1)
+        bar = '=' * filled_len + '-' * (bar_len - filled_len)
+        try:
+            sys.stdout.write('[%s] %s%s %s Processing line: %s \r' % (bar, percents, '%', suffix, self.index))
+            sys.stdout.flush()  
+        except :
+            print ("\n warning: [shuld never happen error] loader-bar error count \t {0} \t total {1} \n".format(self.index, self.total))
+
+    def is_unknown_source(self, qs):
+        if self.__unknown_mappings.get(qs.domain) is not None : 
+            for unknown_source in self.__unknown_mappings.get(qs.domain):
+                if unknown_source in qs.sitelink: 
+                    return True
+        return False 
+
+    def __get_db_id(self, domain):
+        for mapping_entry in self.__mappings.get(domain) :
+            if mapping_entry.db_id is not None :
+                return qs_utils.db_reference(LinkMapping(db_id=mapping_entry.db_id))
+        return qs_utils.db_reference()
+
+    def __is_domain_just_mapped(self, qs):
+        if qs.domain not in self.domains_just_mapped : 
+            return True
+        return False 
