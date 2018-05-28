@@ -7,6 +7,7 @@ class LinkMapping(object):
     db_id = None
     db_property = None
     url_pattern = None
+    to_upper_case = False
     
     def __eq__(self, other):
         if self.db_id == other.db_id and self.db_property == other.db_property and self.url_pattern == other.url_pattern :
@@ -17,15 +18,15 @@ class LinkMapping(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def __init__(self, db_id = None, db_property = None, url_pattern = None):
+    def __init__(self, db_id = None, db_property = None, url_pattern = None, to_upper_case = False):
         self.db_id = db_id
         self.db_property = db_property
-        if url_pattern != None :
+        if url_pattern is not None :
             url_pattern = url_pattern.encode('ascii')
         self.url_pattern = url_pattern
+        self.to_upper_case = to_upper_case
 
 class Mapping(object) :
-    # dictionary (key : value = [])
     __content = {} 
     __file = "" 
     __log_file = ""
@@ -36,7 +37,7 @@ class Mapping(object) :
         self.__log_file = log_file
     
     def add(self, key, value, export=True):
-        if self.__content.get(key) == None : 
+        if self.__content.get(key) is None : 
             self.__content[key] = [value]
         elif value not in self.__content[key]:                         
             self.__content[key].append(value)
@@ -44,13 +45,12 @@ class Mapping(object) :
             self.save()
     
     def add_domain(self, key, value, export=True):
-        if key != None :
+        if key is not None :
             key.encode('ascii').replace("/", "")
         self.add(key, value, export)
 
     def save(self, mode = 'w'):
-        serialized_object = json.dumps(self.__content, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-        file_utils.log(self.__file, serialized_object, mode)
+        file_utils.export(self.__file, self.__content, mode)
 
     def load(self, source_file = None):
         if source_file is None :
@@ -75,9 +75,9 @@ class Mapping(object) :
         return self.__content.keys()
 
     def get(self, item):
-        if item != None and self.contains(item):
+        if item is not None and self.contains(item):
             return self.__content[item]
         return []
 
     def contains(self, item):
-        return self.__content.get(item) != None
+        return self.__content.get(item) is not None

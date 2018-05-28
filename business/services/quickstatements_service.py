@@ -3,9 +3,10 @@ import domain.localizations as loc
 import business.utils.url_utils as url_utils
 import business.queries.sitelink_queries as query
 import business.utils.file_utils as file_utils
+import business.utils.quickstatememnts_utils as qs_utils
 from business.mapping import Mapping, LinkMapping
 from business.quickstatement import QuickStatement
-import business.utils.quickstatememnts_utils as qs_utils
+
 
 class QuickStatementsService(object):
 
@@ -26,7 +27,6 @@ class QuickStatementsService(object):
                 self.domains = self.__unknown_mappings.get_domains()
 
     # testing
-    
     def get_mappings(self, domain):
         return self.__mappings.get(domain)
     
@@ -34,12 +34,20 @@ class QuickStatementsService(object):
         return self.__unknown_mappings.get(domain)
 
     # wrappers
-    def refresh_urls (self, domains = []):
+    def refresh_urls (self, domains = loc.domains_to_refresh):
         for domain in domains:
             if domain not in self.domains:
                 self.domains.append(domain)
-
         self. __rows_cycle(self.__refresh_urls_handler)
+
+    def refresh_urls_to_https (self, domains = loc.domains_to_https):
+        for domain in domains:
+            if domain not in self.domains:
+                self.domains.append(domain)
+        self. __rows_cycle(self.__refresh_urls_to_https_handler)
+
+    def refresh_urls_as_query_params (self):
+        self. __rows_cycle(self.__refresh_urls_as_query_params_handler)
 
     def export_unmapped_url_list (self):
         self. __rows_cycle(self.__export_unmapped_url_list_handler)
@@ -50,19 +58,19 @@ class QuickStatementsService(object):
     def generate_db_reference_wrapper(self, qs):  
         reference = self.generate_db_reference(qs)
         qs.append(reference)
-        file_utils.log(loc.output_file, qs.serialize())
+        file_utils.log_in_memory(loc.output_file, qs.serialize())
         self.__export_mappings()
         self.__progress()
 
     def generate_db_reference(self, qs):
-        if(qs.domain == None):
+        if(qs.domain is None):
             return qs_utils.db_reference()
         if(self.is_unknown_source(qs)) :
             return self.__get_db_id(qs.domain)
         try: 
             for link_mapping in self.__mappings.get(qs.domain) :
                 if url_utils.validate_url_template(qs.sitelink, link_mapping.url_pattern) : 
-                    content = url_utils.extract_placeholder(link_mapping.url_pattern, qs.sitelink)
+                    content = url_utils.extract_placeholder(link_mapping, qs.sitelink)
                     return qs_utils.db_reference(link_mapping, content)
             if(loc.MAP_ALL_RESPONSES and self.__is_domain_just_mapped(qs)) :
                 return self.__get_db_id(qs.domain)
@@ -85,33 +93,53 @@ class QuickStatementsService(object):
                     handler(qs)
                 except : 
                     file_utils.log(loc.error_file, "Error at row: {0}".format(row))
+            file_utils.log(loc.output_file, file_utils.output)
 
     # handlers
+    def __refresh_urls_as_query_params_handler(self, qs): 
+        self.__progress()
+        if qs.sitelink is not None :
+            if qs.domain == "collection.britishmuseum.org" :
+                base_url = "https://collection.britishmuseum.org/resource/"
+                query = {"uri" : qs.sitelink}
+                qs.set_sitelink(url_utils.build_query_url(base_url, query))
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
+
+    def __refresh_urls_to_https_handler(self, qs): 
+        self.__progress()
+        if qs.sitelink is not None :
+            if qs.domain in self.domains:
+                qs.set_sitelink(url_utils.to_https(qs.sitelink))
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
+
     def __refresh_urls_handler(self, qs): 
         self.__progress()
         old_sitelink = qs.sitelink
-        if qs.sitelink != None :
-            if self.__refreshed_urls.get(qs.sitelink) != None :
+        if qs.sitelink is not None :
+            if self.__refreshed_urls.get(qs.sitelink) is not None :
                 qs.set_sitelink(self.__refreshed_urls.get(qs.sitelink))
             elif len(self.domains) == 0 or (qs.domain in self.domains):
                 if qs.refresh():
                     self.__refreshed_urls[old_sitelink] = qs.sitelink
-                elif loc.DELETE_ROW :
+                    file_utils.export(loc.refreshed_urls_file, self.__refreshed_urls)
+                elif loc.DELETE_ROW and qs.sitelink is None:
                     qs.delete_sitelink()
-            file_utils.log(loc.output_file, qs.serialize())
+                    file_utils.log(loc.deleted_rows_file, "{0} \t old_link \t {1}".format(qs.serialize(), old_sitelink))
+                    return
+            file_utils.log_in_memory(loc.output_file, qs.serialize())
  
     def __export_unmapped_url_list_handler(self, qs):
         self.__progress()
-        if qs.sitelink != None :
+        if qs.sitelink is not None :
             is_not_mapped = True
             for link_mapping in self.__mappings.get(qs.domain):
                 if qs.validate(link_mapping.url_pattern):
                     is_not_mapped = False
             if is_not_mapped :
-                file_utils.log(loc.output_file, qs.sitelink)
+                file_utils.log_in_memory(loc.output_file, qs.sitelink)
 
     def __add_db_references_async_handler(self, qs):
-        if qs.sitelink != None :
+        if qs.sitelink is not None :
             if(loc.IS_ASYNC_MODE):
                 thread = threading.Thread(target=self.generate_db_reference_wrapper, args=(qs))
                 thread.daemon = True
@@ -175,7 +203,7 @@ class QuickStatementsService(object):
 
             for link_mapping in self.__mappings.get(qs.domain) :
                 if url_utils.validate_url_template(qs.sitelink, link_mapping.url_pattern) : 
-                    content = url_utils.extract_placeholder(link_mapping.url_pattern, qs.sitelink)
+                    content = url_utils.extract_placeholder(link_mapping, qs.sitelink)
                     return qs_utils.db_reference(link_mapping, content)
 
             if len(result) == 0:
@@ -213,7 +241,7 @@ class QuickStatementsService(object):
             print ("\n warning: [shuld never happen error] loader-bar error count \t {0} \t total {1} \n".format(self.index, self.total))
 
     def is_unknown_source(self, qs):
-        if self.__unknown_mappings.get(qs.domain) != None : 
+        if self.__unknown_mappings.get(qs.domain) is not None : 
             for unknown_source in self.__unknown_mappings.get(qs.domain):
                 if unknown_source in qs.sitelink: 
                     return True
@@ -221,7 +249,7 @@ class QuickStatementsService(object):
 
     def __get_db_id(self, domain):
         for mapping_entry in self.__mappings.get(domain) :
-            if mapping_entry.db_id != None :
+            if mapping_entry.db_id is not None :
                 return qs_utils.db_reference(LinkMapping(db_id=mapping_entry.db_id))
         return qs_utils.db_reference()
 

@@ -1,6 +1,7 @@
 import urllib, urllib2, json, re
 from collections import namedtuple
 import domain.localizations as loc
+from requests.utils import quote
 
 def refresh_url(old_url):
     try :
@@ -28,7 +29,7 @@ def http_call(base_url, parameters, method = "GET", headers = []):
     return urllib2.urlopen(request).read()
 
 def get_domain (url):
-    if url != None:
+    if url is not None:
         domain = url.split("//")[-1].split("/")[0].split('?')[0]
         if domain == "" :
             return None
@@ -37,7 +38,7 @@ def get_domain (url):
     return None
 
 def validate_url_template(sitelink, url_pattern): # TODO handle cases with more than one placeholder ($1)
-    if(url_pattern == None) :
+    if(url_pattern is None) :
         return False
     pattern = re.compile(re.escape(url_pattern.encode('ascii')).replace("\\$1", ".*"))
     if(pattern.match(sitelink)):
@@ -52,9 +53,24 @@ def get_link (row):
         return None
     return link
 
-def extract_placeholder(url_pattern, url): # TODO now this works only for one placeholder ($1)
-    url_pattern = url_pattern.split("$1")
-    return url.replace(url_pattern[0], "").replace(url_pattern[1], "")
+def extract_placeholder(link_mapping, url): # TODO now this works only for one placeholder ($1)
+    url_pattern = link_mapping.url_pattern.split("$1")
+    content = url.replace(url_pattern[0], "").replace(url_pattern[1], "")
+    if link_mapping.to_upper_case:
+        return content.upper()
+    return content
+
+def build_query_url(base_url, query_parameters):
+    url = "{0}?".format(base_url)
+    for key, value in query_parameters.iteritems():
+        url = "{0}{1}={2}&".format(url, key, percent_encoding(value))
+    return url[:-1]
+
+def percent_encoding(query):
+    return quote(query, safe='')
+
+def to_https(http_url):
+    return http_url.replace("http:", "https:")
 
 class Header(object):
     key = ""

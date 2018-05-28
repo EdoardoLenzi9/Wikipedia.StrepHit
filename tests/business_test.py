@@ -6,6 +6,7 @@ import domain.localizations as loc
 from business.services.quickstatements_service import QuickStatementsService 
 from business.quickstatement import QuickStatement
 import business.utils.quickstatememnts_utils as qs_utils 
+from business.mapping import LinkMapping
 
 class QueriesTest(unittest.TestCase):
     
@@ -18,6 +19,24 @@ class QueriesTest(unittest.TestCase):
 
 class UrlSvcTest(unittest.TestCase):
     
+    def test_bug_on_url_refresh(self):
+        # Arrange
+        # url = 'http://vocab.getty.edu/ulan/500122964'
+        url = 'http://vocab.getty.edu/ulan/500122964'
+
+        # Act 
+        refreshed_url = url_utils.refresh_url(url)
+        
+        # Assert
+        self.assertEqual(refreshed_url, url)
+
+    def test_build_query_url(self):
+        # Arrange
+        base_url = "https://collection.britishmuseum.org/resource/"
+        query = {"uri" : "http://collection.britishmuseum.org/id/person-institution/143629"}
+        url = url_utils.build_query_url(base_url, query);
+        self.assertEqual(url, "https://collection.britishmuseum.org/resource/?uri=http%3A%2F%2Fcollection.britishmuseum.org%2Fid%2Fperson-institution%2F143629")
+
     def test_validate_url_template(self):
         # Arrange
         sitelink = "http://sculpture.gla.ac.uk/view/person.php?id=msib3_1266502314"
@@ -60,7 +79,7 @@ class UrlSvcTest(unittest.TestCase):
         # Assert
         self.assertIsNone(refreshed_url)
 
-    def test_url_refresh_on_an_normal_url(self):
+    def test_url_refresh_on_a_normal_url(self):
         # Arrange
         url = 'http://adb.anu.edu.au/biography/white-patrick-victor-paddy-14925'
 
@@ -69,6 +88,17 @@ class UrlSvcTest(unittest.TestCase):
         
         # Assert
         self.assertEqual(refreshed_url, url)
+
+    def test_url_extract_placeholder(self):
+        # Arrange
+        url = 'http://www.wga.hu/bio/j/joseph/biograph.html'
+        formatter_url = "http://www.wga.hu/bio/j/$1/biograph.html"
+        link_mapping = LinkMapping(0, 0, formatter_url, True)  
+        # Act 
+        placeholder = url_utils.extract_placeholder(link_mapping, url)
+        
+        # Assert
+        self.assertEqual("JOSEPH", placeholder)
 
 class QuickStatementSvcTest(unittest.TestCase):
     def test_generate_db_reference_for_an_unknown_domain(self):
@@ -102,7 +132,7 @@ class QuickStatementSvcTest(unittest.TestCase):
         mapping_list = qs_svc.get_mappings(domain) 
         for mapping_entry in mapping_list :
             if url_utils.validate_url_template(link, mapping_entry.url_pattern) : 
-                content = url_utils.extract_placeholder(mapping_entry.url_pattern, link)
+                content = url_utils.extract_placeholder(mapping_entry, link)
         reference_prefix = "S248\t{0}\t{1}\t\"{2}\"\tS813\t".format(mapping_entry.db_id, mapping_entry.db_property, content)
 
         self.assertIn(reference_prefix, reference)
