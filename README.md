@@ -37,14 +37,19 @@ or
     $ cd Wikipedia.StrepHit
     $ pip install -r requirements.txt
 ```
+## For Windows Users
+* Install `setup.py`
+```
+    python -m pip install --editable <PATH to your folder>
+```
 
-#### Launch script
+## Launch script
 ```sh
     strephit --help
     strephit add_references
 ```
 
-#### Click Description
+## Click Description
 ```
 strephit --help
 Usage: strephit [OPTIONS] COMMAND [ARGS]...
