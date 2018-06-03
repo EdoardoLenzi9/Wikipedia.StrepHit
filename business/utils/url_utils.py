@@ -40,7 +40,7 @@ def get_domain (url):
 def validate_url_template(sitelink, url_pattern): # TODO handle cases with more than one placeholder ($1)
     if(url_pattern is None) :
         return False
-    pattern = re.compile(re.escape(url_pattern.encode('ascii')).replace("\\$1", ".*"))
+    pattern = re.compile(re.escape(url_pattern.encode('ascii')).replace("\\$1", ".*")+"$")
     if(pattern.match(sitelink)):
     	return True 
     else :
@@ -54,8 +54,11 @@ def get_link (row):
     return link
 
 def extract_placeholder(link_mapping, url): # TODO now this works only for one placeholder ($1)
-    url_pattern = link_mapping.url_pattern.split("$1")
-    content = url.replace(url_pattern[0], "").replace(url_pattern[1], "")
+    url_pattern = link_mapping.url_pattern.split("$1",1)
+    prefix = url_pattern[0]
+    suffix = url_pattern[1]
+    # content = url.replace(url_pattern[0], "").replace(url_pattern[1], "")
+    content = url[len(prefix):len(url)-len(suffix)]
     if link_mapping.to_upper_case:
         return content.upper()
     return content

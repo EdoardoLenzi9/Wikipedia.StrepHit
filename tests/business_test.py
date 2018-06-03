@@ -45,6 +45,15 @@ class UrlSvcTest(unittest.TestCase):
         # Act and Assert
         self.assertTrue(url_utils.validate_url_template (sitelink, url_pattern))
 
+    def test_validate_url_template_bug(self):
+            # Arrange
+        sitelink = "https://collection.cooperhewitt.org/people/18040949/bio"
+        url_pattern = "https://collection.cooperhewitt.org/people/$1/bio"
+
+        # Act and Assert
+        self.assertTrue(url_utils.validate_url_template(sitelink, url_pattern))
+
+
     def test_get_domain(self):
         # Arrange
         sitelink = "https://en.wikisource.org/"
@@ -99,6 +108,17 @@ class UrlSvcTest(unittest.TestCase):
         
         # Assert
         self.assertEqual("JOSEPH", placeholder)
+
+    def test_url_extract_placeholder_slash_bug(self):
+        # Arrange
+        url = 'http://www.nndb.com/people/679/000107358/'
+        formatter_url = "http://www.nndb.com/people/$1"
+        link_mapping = LinkMapping(0, 0, formatter_url, True)  
+        # Act 
+        placeholder = url_utils.extract_placeholder(link_mapping, url)
+        
+        # Assert
+        self.assertEqual("679/000107358", placeholder)
 
 class QuickStatementSvcTest(unittest.TestCase):
     def test_generate_db_reference_for_an_unknown_domain(self):

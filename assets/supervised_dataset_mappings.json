@@ -109,6 +109,12 @@
             "db_property": "S245", 
             "to_upper_case": false, 
             "url_pattern": "http://vocab.getty.edu/page/ulan/$1"
+        }, 
+        {
+            "db_id": "Q2494649", 
+            "db_property": "S245", 
+            "to_upper_case": false, 
+            "url_pattern": "http://vocab.getty.edu/ulan/$1"
         }
     ], 
     "www.bbc.co.uk": [
@@ -178,7 +184,319 @@
             "db_id": "Q1464063", 
             "db_property": "S1882", 
             "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/a/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/b/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/c/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/d/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/e/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/f/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/g/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/h/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/i/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/j/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/k/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/l/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/m/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/n/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/o/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/p/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/q/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/r/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/s/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/t/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/u/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/v/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/w/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/x/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/y/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/z/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/a/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/b/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/c/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/d/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/e/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/f/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/g/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/h/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/i/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
             "url_pattern": "http://www.wga.hu/bio/j/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/k/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/l/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/m/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/n/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/o/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/p/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/q/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/r/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/s/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/t/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/u/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/v/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/w/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/x/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/y/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.wga.hu/bio/z/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": null, 
+            "to_upper_case": false, 
+            "url_pattern": null
         }
     ], 
     "yba.llgc.org.uk": [
