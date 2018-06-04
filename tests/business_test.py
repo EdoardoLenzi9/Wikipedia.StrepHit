@@ -112,7 +112,7 @@ class UrlSvcTest(unittest.TestCase):
     def test_url_extract_placeholder_slash_bug(self):
         # Arrange
         url = 'http://www.nndb.com/people/679/000107358/'
-        formatter_url = "http://www.nndb.com/people/$1"
+        formatter_url = "http://www.nndb.com/people/$1/"
         link_mapping = LinkMapping(0, 0, formatter_url, True)  
         # Act 
         placeholder = url_utils.extract_placeholder(link_mapping, url)
