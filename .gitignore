@@ -1,3 +1,9 @@
 *.pyc
 assets/supervised_dataset_output.qs
+assets/supervised_dataset_mappings.json
+assets/supervised_dataset_unknown_mappings.json
 assets/supervised_dataset_errors.log
+assets/supervised_dataset_deleted_rows.log
+assets/supervised_dataset.qs.old
+assets/supervised_dataset_refreshed_urls.json
+*.backup

@@ -1,0 +1,340 @@
+{
+    "adb.anu.edu.au": [
+        {
+            "db_id": "Q672680", 
+            "db_property": "S1907", 
+            "to_upper_case": false, 
+            "url_pattern": "http://adb.anu.edu.au/biography/$1"
+        }
+    ], 
+    "archive.org": [
+        {
+            "db_id": "Q461", 
+            "db_property": "S724", 
+            "to_upper_case": false, 
+            "url_pattern": "https://archive.org/details/$1"
+        }
+    ], 
+    "artuk.org": [
+        {
+            "db_id": "Q7257339", 
+            "db_property": "S1367", 
+            "to_upper_case": false, 
+            "url_pattern": "https://artuk.org/discover/artists/$1"
+        }
+    ], 
+    "collection.britishmuseum.org": [
+        {
+            "db_id": "Q34753751", 
+            "db_property": null, 
+            "to_upper_case": false, 
+            "url_pattern": null
+        }
+    ], 
+    "collection.cooperhewitt.org": [
+        {
+            "db_id": "Q1129820", 
+            "db_property": "S2011", 
+            "to_upper_case": false, 
+            "url_pattern": "https://collection.cooperhewitt.org/people/$1/bio"
+        }
+    ], 
+    "dictionaryofarthistorians.org": [
+        {
+            "db_id": "Q17166797", 
+            "db_property": "S2332", 
+            "to_upper_case": false, 
+            "url_pattern": "https://dictionaryofarthistorians.org/$1.html"
+        }
+    ], 
+    "en.wikisource.org": [
+        {
+            "db_id": "Q15156406", 
+            "db_property": null, 
+            "to_upper_case": false, 
+            "url_pattern": null
+        }
+    ], 
+    "gameo.org": [
+        {
+            "db_id": "Q1531559", 
+            "db_property": "S1842", 
+            "to_upper_case": false, 
+            "url_pattern": "http://gameo.org/index.php?title=$1"
+        }
+    ], 
+    "munksroll.rcplondon.ac.uk": [
+        {
+            "db_id": "Q6936720", 
+            "db_property": "S2941", 
+            "to_upper_case": false, 
+            "url_pattern": "http://munksroll.rcplondon.ac.uk/Biography/Details/$1"
+        }
+    ], 
+    "rkd.nl": [
+        {
+            "db_id": "Q17299517", 
+            "db_property": "S650", 
+            "to_upper_case": false, 
+            "url_pattern": "https://rkd.nl/en/explore/artists/$1"
+        }
+    ], 
+    "structurae.net": [
+        {
+            "db_id": "Q1061861", 
+            "db_property": "S2418", 
+            "to_upper_case": false, 
+            "url_pattern": "https://structurae.de/personen/$1"
+        }
+    ], 
+    "test": [
+        {
+            "db_id": "Q1762512345", 
+            "db_property": "S2431", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.museothyssen.org/en/thyssen/ficha_artista/$1"
+        }
+    ], 
+    "vocab.getty.edu": [
+        {
+            "db_id": "Q2494649", 
+            "db_property": "S245", 
+            "to_upper_case": false, 
+            "url_pattern": "http://vocab.getty.edu/page/ulan/$1"
+        }, 
+        {
+            "db_id": "Q2494649", 
+            "db_property": "S245", 
+            "to_upper_case": false, 
+            "url_pattern": "http://vocab.getty.edu/ulan/$1"
+        }
+    ], 
+    "www.bbc.co.uk": [
+        {
+            "db_id": "Q7257339", 
+            "db_property": "S1367", 
+            "to_upper_case": false, 
+            "url_pattern": "https://artuk.org/discover/artworks/search/actor:$1"
+        }
+    ], 
+    "www.daao.org.au": [
+        {
+            "db_id": "Q5273961", 
+            "db_property": "S1707", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.daao.org.au/bio/$1"
+        }
+    ], 
+    "www.genealogics.org": [
+        {
+            "db_id": "Q19847326", 
+            "db_property": "S1819", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.genealogics.org/getperson.php?personID=$1&tree=LEO"
+        }
+    ], 
+    "www.museothyssen.org": [
+        {
+            "db_id": "Q176251", 
+            "db_property": "S2431", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.museothyssen.org/en/thyssen/ficha_artista/$1"
+        }, 
+        {
+            "db_id": "Q1762512345", 
+            "db_property": "S2431", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.museothyssen.org/en/thyssen/ficha_artista/$1"
+        }
+    ], 
+    "www.newulsterbiography.co.uk": [
+        {
+            "db_id": "Q21814517", 
+            "db_property": "S2029", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.newulsterbiography.co.uk/index.php/home/viewPerson/$1"
+        }
+    ], 
+    "www.nndb.com": [
+        {
+            "db_id": "Q1373513", 
+            "db_property": "S1263", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.nndb.com/people/$1/"
+        }
+    ], 
+    "www.uni-stuttgart.de": [
+        {
+            "db_id": "Q21417186", 
+            "db_property": "S2349", 
+            "to_upper_case": false, 
+            "url_pattern": "http://www.uni-stuttgart.de/hi/gnt/dsi2/index.php?table_name=dsi&function=details&where_field=id&where_value=$1"
+        }
+    ], 
+    "www.wga.hu": [
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/a/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/b/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/c/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/d/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/e/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/f/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/g/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/h/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/i/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/j/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/k/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/l/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/m/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/n/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/o/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/p/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/q/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/r/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/s/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/t/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/u/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/v/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/w/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/x/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/y/$1/biograph.html"
+        }, 
+        {
+            "db_id": "Q1464063", 
+            "db_property": "S1882", 
+            "to_upper_case": false, 
+            "url_pattern": "https://www.wga.hu/bio/z/$1/biograph.html"
+        }
+    ], 
+    "yba.llgc.org.uk": [
+        {
+            "db_id": "Q5273977", 
+            "db_property": "S1648", 
+            "to_upper_case": false, 
+            "url_pattern": "http://yba.llgc.org.uk/en/$1"
+        }
+    ]
+}
